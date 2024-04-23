@@ -19,8 +19,9 @@ const getAllUsers = async (req, res) => {
 const registerUser = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
+    username: Joi.string().min(3).max(30).required(),
     password: Joi.string().min(8).required(),
-    role: Joi.string().valid("user", "admin").default("user"),
+    role: Joi.string().valid("user", "artist").default("user"),
   });
 
   const { error, value } = schema.validate(req.body);
@@ -28,7 +29,7 @@ const registerUser = async (req, res) => {
     return res.status(400).json({ status: "error", message: error.message });
   }
 
-  const { email, password, role } = value;
+  const { email, username, password, role } = value;
 
   try {
     // Check if the user already exists
@@ -47,8 +48,8 @@ const registerUser = async (req, res) => {
 
     // Insert the new user into the database
     await pool.query(
-      "INSERT INTO users (email, hash, role) VALUES ($1, $2, $3)",
-      [email, hash, role]
+      "INSERT INTO users (email, username, hash, role) VALUES ($1, $2, $3, $4)",
+      [email, username, hash, role]
     );
 
     res.json({ status: "success", message: "User registered" });
@@ -124,7 +125,6 @@ const refresh = (req, res) => {
   }
 };
 
-// Export the controller functions
 module.exports = {
   getAllUsers,
   registerUser,

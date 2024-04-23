@@ -15,7 +15,7 @@ const getAllPlaylists = async (req, res) => {
 
 // get playlist by id
 const getPlaylistById = async (req, res) => {
-  const { id } = req.params; // Playlist ID
+  const { id } = req.params;
 
   try {
     const playlist = await pool.query(
@@ -34,7 +34,7 @@ const getPlaylistById = async (req, res) => {
   }
 };
 
-// Validate Playlist Input
+// Validate Playlist Input with Joi
 const validatePlaylist = (playlist) => {
   const schema = Joi.object({
     title: Joi.string().required(),
@@ -44,17 +44,24 @@ const validatePlaylist = (playlist) => {
   return schema.validate(playlist);
 };
 
-// Create Playlist
+// create playlist
 const createPlaylist = async (req, res) => {
-  const { error, value } = validatePlaylist(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
+  console.log("req.user:", req.user);
+  console.log("req.user.id:", req.user.id);
 
-  const { title, content, cover } = value;
+  const { title, content } = req.body;
+  let cover = null;
+
+  if (req.file) {
+    cover = `/uploads/${req.file.filename}`;
+  }
 
   try {
     const userId = req.user.id;
+    console.log("Inserting playlist with user_id:", userId);
+
     const result = await pool.query(
-      "INSERT INTO playlist (playlist_id, user_id, title, content, cover) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      "INSERT INTO playlists (playlist_id, user_id, title, content, cover) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [uuidv4(), userId, title, content, cover]
     );
     res.status(201).json({ data: result.rows[0], message: "Playlist created" });

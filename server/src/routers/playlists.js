@@ -1,4 +1,5 @@
 const express = require("express");
+const upload = require("../middleware/multer");
 const router = express.Router();
 const {
   createPlaylist,
@@ -7,11 +8,12 @@ const {
   getAllPlaylists,
   getPlaylistById,
 } = require("../controllers/playlists");
+const { authUser } = require("../middleware/auth");
 
-router.get("/", getAllPlaylists);
-router.get("/:id", getPlaylistById);
-router.post("/", createPlaylist);
-router.put("/:id", editPlaylist);
-router.delete("/:id", deletePlaylist);
+router.get("/", authUser, getAllPlaylists);
+router.get("/:id", authUser, getPlaylistById);
+router.post("/", upload.single("cover"), authUser, createPlaylist);
+router.put("/:id", upload.single("cover"), authUser, editPlaylist);
+router.delete("/:id", authUser, deletePlaylist);
 
 module.exports = router;
