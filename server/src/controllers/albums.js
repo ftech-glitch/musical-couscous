@@ -1,4 +1,5 @@
 const pool = require("../db/db");
+const Joi = require("joi");
 const { v4: uuidv4 } = require("uuid");
 
 // get all albums
@@ -65,13 +66,13 @@ const deleteAlbum = async (req, res) => {
       [album_id, artist_id]
     );
 
-    if (artist.rowCount === 0) {
+    if (album.rowCount === 0) {
       return res
         .status(403)
         .json({ message: "Artist doesn't have access to delete!" });
     }
 
-    await pool.query("DELETE FROM albums WHERE artist_id = $1", [album_id]);
+    await pool.query("DELETE FROM albums WHERE album_id = $1", [album_id]);
 
     res.status(200).json({ message: "Album deleted" });
   } catch (error) {
@@ -80,10 +81,23 @@ const deleteAlbum = async (req, res) => {
   }
 };
 
+// validate album input with Joi
+const validateAlbum = (album) => {
+  const schema = Joi.object({
+    title: Joi.string().required(),
+    content: Joi.string().allow(""),
+    cover: Joi.string().allow(""),
+  });
+  return schema.validate(album);
+};
+
 // edit album
 const editAlbum = async (req, res) => {
+  const { error, value } = validateAlbum(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
+
   const { album_id, artist_id } = req.params;
-  const { title, content, cover } = req.body;
+  const { title, content, cover } = value;
 
   try {
     // check if album belongs to artist
