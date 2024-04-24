@@ -8,7 +8,7 @@ router.get("/", auth, async (req, res) => {
 
   try {
     if (search) {
-      // Use ILIKE for case-insensitive search
+      // case-insensitive search
       const songsQuery = `
         SELECT * FROM songs 
         WHERE title ILIKE $1 

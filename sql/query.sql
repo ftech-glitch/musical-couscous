@@ -86,3 +86,6 @@ BEFORE UPDATE ON artists
 FOR EACH ROW
 WHEN (OLD.last_login IS DISTINCT FROM NEW.last_login)
 EXECUTE FUNCTION update_artist_last_login();
+
+ALTER TABLE songs
+ALTER COLUMN length TYPE VARCHAR(50) USING length::VARCHAR;

@@ -28,6 +28,102 @@ const getAllArtists = async (req, res) => {
   }
 };
 
+// edit user
+const editUser = async (req, res) => {
+  const { user_id } = req.params; // Assume you are passing user_id in the URL
+  const { email, username, password } = req.body;
+
+  // Validate the input data using Joi
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    username: Joi.string().min(3).max(30).required(),
+    password: Joi.string().min(8),
+  });
+
+  const { error, value } = schema.validate({ email, username, password });
+  if (error) {
+    return res.status(400).json({ status: "error", message: error.message });
+  }
+
+  try {
+    let hash = null;
+    if (password) {
+      // If password is provided, hash it
+      hash = await bcrypt.hash(password, 12);
+    }
+
+    // Update the user record
+    const query = hash
+      ? "UPDATE users SET email = $1, username = $2, hash = $3 WHERE user_id = $4 RETURNING *"
+      : "UPDATE users SET email = $1, username = $2 WHERE user_id = $3 RETURNING *";
+
+    const values = hash
+      ? [email, username, hash, user_id]
+      : [email, username, user_id];
+
+    const result = await pool.query(query, values);
+
+    if (result.rowCount === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found" });
+    }
+
+    res.status(200).json({ status: "success", data: result.rows[0] });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ status: "error", message: "Error editing user" });
+  }
+};
+
+// edit artist
+const editArtist = async (req, res) => {
+  const { artist_id } = req.params; // Assume you are passing artist_id in the URL
+  const { email, username, password } = req.body;
+
+  // Validate the input data using Joi
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    username: Joi.string().min(3).max(30).required(),
+    password: Joi.string().min(8),
+  });
+
+  const { error, value } = schema.validate({ email, username, password });
+  if (error) {
+    return res.status(400).json({ status: "error", message: error.message });
+  }
+
+  try {
+    let hash = null;
+    if (password) {
+      // If password is provided, hash it
+      hash = await bcrypt.hash(password, 12);
+    }
+
+    // Update the artist record
+    const query = hash
+      ? "UPDATE artists SET email = $1, username = $2, hash = $3 WHERE artist_id = $4 RETURNING *"
+      : "UPDATE artists SET email = $1, username = $2 WHERE artist_id = $3 RETURNING *";
+
+    const values = hash
+      ? [email, username, hash, artist_id]
+      : [email, username, artist_id];
+
+    const result = await pool.query(query, values);
+
+    if (result.rowCount === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Artist not found" });
+    }
+
+    res.status(200).json({ status: "success", data: result.rows[0] });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ status: "error", message: "Error editing artist" });
+  }
+};
+
 // register a new user
 const registerUser = async (req, res) => {
   const schema = Joi.object({
@@ -245,4 +341,6 @@ module.exports = {
   refresh,
   loginArtist,
   getAllArtists,
+  editArtist,
+  editUser,
 };

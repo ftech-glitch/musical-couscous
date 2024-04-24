@@ -142,7 +142,7 @@ const createSong = async (req, res) => {
     const result = await pool.query(
       "INSERT INTO songs (album_id, playlist_id, title, artist, album, genre, length, details) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
       [
-        album_id || null,
+        album_id,
         playlist_id || null,
         title,
         artistName,
@@ -176,31 +176,35 @@ const validateSong = (song) => {
     length: Joi.string().allow(""),
     details: Joi.string().allow(""),
   });
+  return schema.validate(song);
 };
 
+// edit song
 const editSong = async (req, res) => {
   const { error, value } = validateSong(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
 
-  const { song_id, artist_id } = req.params;
-  const { title, artist, album, genre, length, details } = value;
+  const { song_id, album_id, artist_id } = req.params;
+  const { title, genre, length, details } = value;
 
   try {
-    // check if song belongs to artist
-    const song = await pool.query(
-      "SELECT * FROM songs WHERE song_id = $1 AND artist_id = $2",
+    // Verify the song belongs to the album of the specified artist
+    const songCheck = await pool.query(
+      "SELECT songs.song_id FROM songs JOIN albums ON songs.album_id = albums.album_id WHERE songs.song_id = $1 AND albums.artist_id = $2",
       [song_id, artist_id]
     );
 
-    if (song.rowCount === 0) {
+    if (songCheck.rowCount === 0) {
       return res
         .status(403)
-        .json({ message: "Artist doesn't have access to edit!" });
+        .json({ message: "Artist doesn't have access to edit this song!" });
     }
 
     const result = await pool.query(
-      "UPDATE songs SET title = $1, artist = $2, album = $3, genre = $4, length = $5, details = $6 WHERE song_id = $7 RETURNING *",
-      [title, artist, album, genre, length, details]
+      "UPDATE songs SET title = $1, genre = $2, length = $3, details = $4 WHERE song_id = $5 RETURNING *",
+      [title, genre, length, details, song_id]
     );
 
     res.status(200).json({ data: result.rows[0], message: "Song updated" });
@@ -212,24 +216,24 @@ const editSong = async (req, res) => {
 
 // delete song
 const deleteSong = async (req, res) => {
-  const { song_id, artist_id } = req.params;
+  const { song_id, album_id, artist_id } = req.params;
 
   try {
-    // check if song belongs to artist
-    const song = await pool.query(
-      "SELECT * FROM songs WHERE song_id = $1 AND artist_id = $2",
+    // Verify the song belongs to the album of the specified artist
+    const songCheck = await pool.query(
+      "SELECT songs.song_id FROM songs JOIN albums ON songs.album_id = albums.album_id WHERE songs.song_id = $1 AND albums.artist_id = $2",
       [song_id, artist_id]
     );
 
-    if (song.rowCount === 0) {
+    if (songCheck.rowCount === 0) {
       return res
         .status(403)
-        .json({ message: "Artist doesn't have access to delete!" });
+        .json({ message: "Artist doesn't have access to delete this song!" });
     }
 
-    await pool.query("DELETE FROM songs WHERE song_id = $1", [playlist_id]);
+    await pool.query("DELETE FROM songs WHERE song_id = $1", [song_id]);
 
-    res.status(200).json({ message: "Song deleted" });
+    res.status(200).json({ message: "Song deleted successfully" });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Error deleting song" });
