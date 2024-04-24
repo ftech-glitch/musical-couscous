@@ -41,7 +41,7 @@ const createPlaylist = async (req, res) => {
   let cover = null;
 
   if (req.file) {
-    cover = `/uploads/${req.file.filename}`;
+    cover = `/uploads/playlists/${req.file.filename}`;
   }
 
   try {
@@ -100,7 +100,13 @@ const editPlaylist = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { playlist_id, user_id } = req.params;
-  const { title, content, cover } = value;
+  const { title, content } = value;
+
+  let cover = value.cover; // Default cover from body
+
+  if (req.file) {
+    cover = `/uploads/playlists/${req.file.filename}`; // Update if new file uploaded
+  }
 
   try {
     // check if playlist belongs to user

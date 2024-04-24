@@ -1,5 +1,5 @@
 const express = require("express");
-const upload = require("../middleware/multer");
+const { playlistUpload } = require("../middleware/multer");
 const router = express.Router();
 const {
   createPlaylist,
@@ -12,10 +12,15 @@ const { authUser } = require("../middleware/auth");
 
 router.get("/", authUser, getAllPlaylists);
 router.get("/:id", authUser, getPlaylistById);
-router.post("/:user_id", upload.single("cover"), authUser, createPlaylist);
+router.post(
+  "/:user_id",
+  playlistUpload.single("cover"),
+  authUser,
+  createPlaylist
+);
 router.put(
   "/:playlist_id/:user_id",
-  upload.single("cover"),
+  playlistUpload.single("cover"),
   authUser,
   editPlaylist
 );
