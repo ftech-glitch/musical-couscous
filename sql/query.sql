@@ -5,7 +5,6 @@ CREATE TABLE users (
   email VARCHAR(255) UNIQUE NOT NULL,
   username VARCHAR(50) NOT NULL,
   hash TEXT NOT NULL,
-  role VARCHAR(50) DEFAULT 'user',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -21,37 +20,43 @@ CREATE TABLE artists (
 
 CREATE TABLE playlists (
   playlist_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  user_id UUID,
   title VARCHAR(255) NOT NULL,
   content TEXT,
-  cover VARCHAR(255) 
+  cover VARCHAR(255),
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE albums (
   album_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  artist_id UUID REFERENCES artists(artist_id) ON DELETE CASCADE,
+  artist_id UUID,
   title VARCHAR(255) NOT NULL,
   content TEXT,
-  cover VARCHAR(255)  
+  cover VARCHAR(255),
+  CONSTRAINT fk_artist_id FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
 );
 
 CREATE TABLE songs (
   song_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  album_id UUID,
+  playlist_id UUID,
   title VARCHAR(255) NOT NULL,
   artist VARCHAR(255),
   album VARCHAR(255),
   genre VARCHAR(50),
   length INT,
-  album_id UUID REFERENCES albums(album_id) ON DELETE CASCADE,
-  playlist_id UUID REFERENCES playlists(playlist_id) ON DELETE SET NULL,
-  details TEXT
+  details TEXT,
+  CONSTRAINT fk_album_id FOREIGN KEY (album_id) REFERENCES albums(album_id),
+  CONSTRAINT fk_playlist_id FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id)
 );
 
 CREATE TABLE favourites (
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  song_id UUID REFERENCES songs(song_id) ON DELETE CASCADE,
+  user_id UUID,
+  song_id UUID,
   favourited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (user_id, song_id)
+  PRIMARY KEY (user_id, song_id),
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(user_id),
+  CONSTRAINT fk_song_id FOREIGN KEY (song_id) REFERENCES songs(song_id)
 );
 
 CREATE OR REPLACE FUNCTION update_last_login() 
@@ -81,10 +86,3 @@ BEFORE UPDATE ON artists
 FOR EACH ROW
 WHEN (OLD.last_login IS DISTINCT FROM NEW.last_login)
 EXECUTE FUNCTION update_artist_last_login();
-
-ALTER TABLE playlists DROP CONSTRAINT playlists_user_id_fkey;
-ALTER TABLE playlists
-ADD CONSTRAINT playlists_user_id_fkey
-FOREIGN KEY (user_id)
-REFERENCES users(id)
-ON DELETE CASCADE;

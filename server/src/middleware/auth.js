@@ -8,9 +8,9 @@ const authUser = (req, res, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
-      console.log("Decoded JWT:", decoded);
-      req.user = { id: decoded.jti, ...decoded };
-      // req.decoded = decoded;
+      // console.log("Decoded JWT:", decoded);
+      // req.user = { id: decoded.jti, ...decoded };
+      req.decoded = decoded;
       next();
     } catch (error) {
       console.error(error.message);

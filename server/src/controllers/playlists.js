@@ -19,7 +19,7 @@ const getPlaylistById = async (req, res) => {
 
   try {
     const playlist = await pool.query(
-      "SELECT * FROM playlist WHERE playlist_id = $1",
+      "SELECT * FROM playlists WHERE playlist_id = $1",
       [id]
     );
 
@@ -34,6 +34,56 @@ const getPlaylistById = async (req, res) => {
   }
 };
 
+// create playlist
+const createPlaylist = async (req, res) => {
+  const { user_id } = req.params;
+  const { title, content } = req.body;
+  let cover = null;
+
+  if (req.file) {
+    cover = `/uploads/${req.file.filename}`;
+  }
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO playlists (playlist_id, user_id, title, content, cover) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [uuidv4(), user_id, title, content, cover]
+    );
+    res.status(201).json({ data: result.rows[0], message: "Playlist created" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Error creating playlist" });
+  }
+};
+
+// delete playlist
+const deletePlaylist = async (req, res) => {
+  const { playlist_id, user_id } = req.params;
+
+  try {
+    // check if playlist belongs to user
+    const playlist = await pool.query(
+      "SELECT * FROM playlists WHERE playlist_id = $1 AND user_id = $2",
+      [playlist_id, user_id]
+    );
+
+    if (playlist.rowCount === 0) {
+      return res
+        .status(403)
+        .json({ message: "User doesn't have access to delete!" });
+    }
+
+    await pool.query("DELETE FROM playlists WHERE playlist_id = $1", [
+      playlist_id,
+    ]);
+
+    res.status(200).json({ message: "Playlist deleted" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Error deleting playlist" });
+  }
+};
+
 // Validate Playlist Input with Joi
 const validatePlaylist = (playlist) => {
   const schema = Joi.object({
@@ -44,48 +94,19 @@ const validatePlaylist = (playlist) => {
   return schema.validate(playlist);
 };
 
-// create playlist
-const createPlaylist = async (req, res) => {
-  console.log("req.user:", req.user);
-  console.log("req.user.id:", req.user.id);
-
-  const { title, content } = req.body;
-  let cover = null;
-
-  if (req.file) {
-    cover = `/uploads/${req.file.filename}`;
-  }
-
-  try {
-    const userId = req.user.id;
-    console.log("Inserting playlist with user_id:", userId);
-
-    const result = await pool.query(
-      "INSERT INTO playlists (playlist_id, user_id, title, content, cover) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [uuidv4(), userId, title, content, cover]
-    );
-    res.status(201).json({ data: result.rows[0], message: "Playlist created" });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: "Error creating playlist" });
-  }
-};
-
-// Edit Playlist
+// edit playlist
 const editPlaylist = async (req, res) => {
   const { error, value } = validatePlaylist(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const { id } = req.params; // Playlist ID
+  const { playlist_id, user_id } = req.params;
   const { title, content, cover } = value;
 
   try {
-    const userId = req.user.id;
-
-    // Check if the user has access to edit this playlist
+    // check if playlist belongs to user
     const playlist = await pool.query(
-      "SELECT * FROM playlist WHERE playlist_id = $1 AND user_id = $2",
-      [id, userId]
+      "SELECT * FROM playlists WHERE playlist_id = $1 AND user_id = $2",
+      [playlist_id, user_id]
     );
 
     if (playlist.rowCount === 0) {
@@ -95,42 +116,14 @@ const editPlaylist = async (req, res) => {
     }
 
     const result = await pool.query(
-      "UPDATE playlist SET title = $1, content = $2, cover = $3 WHERE playlist_id = $4 RETURNING *",
-      [title, content, cover, id]
+      "UPDATE playlists SET title = $1, content = $2, cover = $3 WHERE playlist_id = $4 RETURNING *",
+      [title, content, cover, playlist_id]
     );
 
     res.status(200).json({ data: result.rows[0], message: "Playlist updated" });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Error updating playlist" });
-  }
-};
-
-// Delete Playlist
-const deletePlaylist = async (req, res) => {
-  const { id } = req.params; // Playlist ID
-
-  try {
-    const userId = req.user.id;
-
-    // Check if the user has access to delete this playlist
-    const playlist = await pool.query(
-      "SELECT * FROM playlist WHERE playlist_id = $1 AND user_id = $2",
-      [id, userId]
-    );
-
-    if (playlist.rowCount === 0) {
-      return res
-        .status(403)
-        .json({ message: "User doesn't have access to delete!" });
-    }
-
-    await pool.query("DELETE FROM playlist WHERE playlist_id = $1", [id]);
-
-    res.status(200).json({ message: "Playlist deleted" });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: "Error deleting playlist" });
   }
 };
 

@@ -12,8 +12,13 @@ const { authUser } = require("../middleware/auth");
 
 router.get("/", authUser, getAllPlaylists);
 router.get("/:id", authUser, getPlaylistById);
-router.post("/", upload.single("cover"), authUser, createPlaylist);
-router.put("/:id", upload.single("cover"), authUser, editPlaylist);
-router.delete("/:id", authUser, deletePlaylist);
+router.post("/:user_id", upload.single("cover"), authUser, createPlaylist);
+router.put(
+  "/:playlist_id/:user_id",
+  upload.single("cover"),
+  authUser,
+  editPlaylist
+);
+router.delete("/:playlist_id/:user_id", authUser, deletePlaylist);
 
 module.exports = router;

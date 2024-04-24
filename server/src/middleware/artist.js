@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     if (err) {
       return res.status(400).send({ message: "invalid token" });
     } else {
-      if (!validToken.isAdmin)
+      if (!validToken.isArtist)
         return res
           .status(403)
           .send({ message: "You don't have access to this content!" });
