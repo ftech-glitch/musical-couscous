@@ -89,3 +89,7 @@ EXECUTE FUNCTION update_artist_last_login();
 
 ALTER TABLE songs
 ALTER COLUMN length TYPE VARCHAR(50) USING length::VARCHAR;
+
+ALTER TABLE songs
+ADD COLUMN audio_file VARCHAR(255);
+

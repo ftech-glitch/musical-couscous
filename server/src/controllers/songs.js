@@ -117,6 +117,13 @@ const createSong = async (req, res) => {
   const { album_id, playlist_id } = req.params;
   const { title, artist, album, genre, length, details } = req.body;
 
+  // Check if the audio file is provided
+  const audioFile = req.file;
+
+  if (!audioFile) {
+    return res.status(400).json({ message: "No audio file uploaded" });
+  }
+
   try {
     let albumName = album;
     let artistName = artist;
@@ -140,7 +147,7 @@ const createSong = async (req, res) => {
 
     // Insert the new song into the songs table
     const result = await pool.query(
-      "INSERT INTO songs (album_id, playlist_id, title, artist, album, genre, length, details) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+      "INSERT INTO songs (album_id, playlist_id, title, artist, album, genre, length, details, audio_file) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
       [
         album_id,
         playlist_id || null,
@@ -150,6 +157,7 @@ const createSong = async (req, res) => {
         genre,
         length || null,
         details || null,
+        audioFile.path,
       ]
     );
 
@@ -165,6 +173,58 @@ const createSong = async (req, res) => {
     res.status(500).json({ status: "error", message: "Error creating song" });
   }
 };
+// const createSong = async (req, res) => {
+//   const { album_id, playlist_id } = req.params;
+//   const { title, artist, album, genre, length, details } = req.body;
+
+//   try {
+//     let albumName = album;
+//     let artistName = artist;
+
+//     if (album_id) {
+//       // Fetch album details from the database to get album name and artist
+//       const albumResult = await pool.query(
+//         "SELECT albums.title AS album_name, artists.username AS artist_name FROM albums JOIN artists ON albums.artist_id = artists.artist_id WHERE albums.album_id = $1",
+//         [album_id]
+//       );
+
+//       if (albumResult.rowCount === 0) {
+//         return res
+//           .status(404)
+//           .json({ status: "error", message: "Album not found" });
+//       }
+
+//       albumName = albumResult.rows[0].album_name;
+//       artistName = albumResult.rows[0].artist_name;
+//     }
+
+//     // Insert the new song into the songs table
+//     const result = await pool.query(
+//       "INSERT INTO songs (album_id, playlist_id, title, artist, album, genre, length, details) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+//       [
+//         album_id,
+//         playlist_id || null,
+//         title,
+//         artistName,
+//         albumName || null,
+//         genre,
+//         length || null,
+//         details || null,
+//       ]
+//     );
+
+//     const newSong = result.rows[0];
+
+//     res.status(201).json({
+//       status: "success",
+//       message: "Song created successfully",
+//       song: newSong,
+//     });
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).json({ status: "error", message: "Error creating song" });
+//   }
+// };
 
 // validate song input with Joi
 const validateSong = (song) => {
@@ -181,38 +241,76 @@ const validateSong = (song) => {
 
 // edit song
 const editSong = async (req, res) => {
-  const { error, value } = validateSong(req.body);
+  const { song_id, album_id, artist_id } = req.params;
+  const { title, genre, length, details } = req.body;
+
+  const { error, value } = validateSong({ title, genre, length, details });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  const { song_id, album_id, artist_id } = req.params;
-  const { title, genre, length, details } = value;
-
   try {
-    // Verify the song belongs to the album of the specified artist
-    const songCheck = await pool.query(
-      "SELECT songs.song_id FROM songs JOIN albums ON songs.album_id = albums.album_id WHERE songs.song_id = $1 AND albums.artist_id = $2",
-      [song_id, artist_id]
-    );
+    // Check if an audio file is provided for updating
+    const audioFile = req.file;
 
-    if (songCheck.rowCount === 0) {
-      return res
-        .status(403)
-        .json({ message: "Artist doesn't have access to edit this song!" });
+    let updateQuery;
+    let updateValues;
+
+    if (audioFile) {
+      // If an audio file is provided, include it in the update
+      updateQuery =
+        "UPDATE songs SET title = $1, genre = $2, length = $3, details = $4, audio_file = $5 WHERE song_id = $6 RETURNING *";
+      updateValues = [title, genre, length, details, audioFile.path, song_id];
+    } else {
+      // Otherwise, update without changing the audio file
+      updateQuery =
+        "UPDATE songs SET title = $1, genre = $2, length = $3, details = $4 WHERE song_id = $5 RETURNING *";
+      updateValues = [title, genre, length, details, song_id];
     }
 
-    const result = await pool.query(
-      "UPDATE songs SET title = $1, genre = $2, length = $3, details = $4 WHERE song_id = $5 RETURNING *",
-      [title, genre, length, details, song_id]
-    );
+    const result = await pool.query(updateQuery, updateValues);
 
-    res.status(200).json({ data: result.rows[0], message: "Song updated" });
+    res
+      .status(200)
+      .json({ data: result.rows[0], message: "Song updated successfully" });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Error updating song" });
   }
 };
+// const editSong = async (req, res) => {
+//   const { error, value } = validateSong(req.body);
+//   if (error) {
+//     return res.status(400).json({ message: error.details[0].message });
+//   }
+
+//   const { song_id, album_id, artist_id } = req.params;
+//   const { title, genre, length, details } = value;
+
+//   try {
+//     // Verify the song belongs to the album of the specified artist
+//     const songCheck = await pool.query(
+//       "SELECT songs.song_id FROM songs JOIN albums ON songs.album_id = albums.album_id WHERE songs.song_id = $1 AND albums.artist_id = $2",
+//       [song_id, artist_id]
+//     );
+
+//     if (songCheck.rowCount === 0) {
+//       return res
+//         .status(403)
+//         .json({ message: "Artist doesn't have access to edit this song!" });
+//     }
+
+//     const result = await pool.query(
+//       "UPDATE songs SET title = $1, genre = $2, length = $3, details = $4 WHERE song_id = $5 RETURNING *",
+//       [title, genre, length, details, song_id]
+//     );
+
+//     res.status(200).json({ data: result.rows[0], message: "Song updated" });
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).json({ message: "Error updating song" });
+//   }
+// };
 
 // delete song
 const deleteSong = async (req, res) => {
