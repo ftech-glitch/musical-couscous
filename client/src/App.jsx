@@ -1,23 +1,29 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import Home from "./pages/Home";
-import Songs from "./pages/Songs";
-import Album from "./pages/Album";
-import Playlist from "./pages/Playlist";
+import React, { useState } from "react";
+import BooksDisplay from "./components/BooksDisplay";
+import Login from "./components/Login";
+import UserContext from "./context/user";
+import Registration from "./components/Registration";
 
-const App = () => {
+function App() {
+  const [accessToken, setAccessToken] = useState("");
+  const [role, setRole] = useState("");
+  const [showLogin, setShowLogin] = useState(true);
+
   return (
-    <Router>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/songs" element={<Songs />} />
-        <Route path="/albums" element={<Album />} />
-        <Route path="/playlists" element={<Playlist />} />
-      </Routes>
-    </Router>
+    <>
+      <UserContext.Provider
+        value={{ accessToken, setAccessToken, role, setRole }}
+      >
+        {accessToken.length > 0 && <BooksDisplay></BooksDisplay>}
+        {accessToken.length === 0 && showLogin && (
+          <Login setShowLogin={setShowLogin}></Login>
+        )}
+        {accessToken.length === 0 && !showLogin && (
+          <Registration setShowLogin={setShowLogin}></Registration>
+        )}
+      </UserContext.Provider>
+    </>
   );
-};
+}
 
 export default App;

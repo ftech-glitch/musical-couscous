@@ -46,8 +46,8 @@ const createAlbum = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "INSERT INTO albums (album_id, artist_id, title, content, cover) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [uuidv4(), artist_id, title, content, cover]
+      "INSERT INTO albums (artist_id, title, content, cover) VALUES ($1, $2, $3, $4) RETURNING *",
+      [artist_id, title, content, cover]
     );
     res
       .status(201)

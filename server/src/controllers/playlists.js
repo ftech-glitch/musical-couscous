@@ -46,8 +46,8 @@ const createPlaylist = async (req, res) => {
 
   try {
     const result = await pool.query(
-      "INSERT INTO playlists (playlist_id, user_id, title, content, cover) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [uuidv4(), user_id, title, content, cover]
+      "INSERT INTO playlists (user_id, title, content, cover) VALUES ($1, $2, $3, $4) RETURNING *",
+      [user_id, title, content, cover]
     );
     res.status(201).json({ data: result.rows[0], message: "Playlist created" });
   } catch (error) {
