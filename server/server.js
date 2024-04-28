@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const pool = require("./src/db/db");
+const path = require("path");
 
 const authRoutes = require("./src/routers/auth");
 const playlistRoutes = require("./src/routers/playlists");
@@ -12,6 +13,8 @@ const searchRoutes = require("./src/routers/search");
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use("/audio", express.static(path.join(__dirname, "./public/audio")));
 
 app.use("/auth", authRoutes);
 app.use("/playlist", playlistRoutes);

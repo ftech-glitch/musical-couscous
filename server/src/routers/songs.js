@@ -12,10 +12,10 @@ const { authArtist, authUser } = require("../middleware/auth");
 const { audioUpload } = require("../middleware/multer");
 const router = express.Router();
 
-router.get("/", authUser, authArtist, getAllSongs);
-router.get("/:song_id", authUser, authArtist, getSongById);
-router.get("/album/:album_id", authUser, authArtist, getSongsInAlbum);
-router.get("/playlist/:playlist_id", authUser, authArtist, getSongsInPlaylist);
+router.get("/", authUser, getAllSongs);
+router.get("/:song_id", authUser, getSongById);
+router.get("/album/:album_id", authUser, getSongsInAlbum);
+router.get("/playlist/:playlist_id", authUser, getSongsInPlaylist);
 router.post(
   "/:playlist_id/:album_id",
   authArtist,

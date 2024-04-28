@@ -64,7 +64,7 @@ const playlistUpload = multer({
 });
 
 // Create uploads directory for audio if it doesn't exist
-const audioUploadDir = path.join(__dirname, "../uploads/audio");
+const audioUploadDir = path.join(__dirname, "../../public/audio");
 if (!fs.existsSync(audioUploadDir)) {
   fs.mkdirSync(audioUploadDir, { recursive: true });
 }

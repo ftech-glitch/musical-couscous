@@ -119,6 +119,7 @@ const createSong = async (req, res) => {
 
   // Check if the audio file is provided
   const audioFile = req.file;
+  const relativeAudioPath = `audio/${audioFile.filename}`;
 
   if (!audioFile) {
     return res.status(400).json({ message: "No audio file uploaded" });
@@ -157,7 +158,7 @@ const createSong = async (req, res) => {
         genre,
         length || null,
         details || null,
-        audioFile.path,
+        relativeAudioPath,
       ]
     );
 

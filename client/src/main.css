@@ -1,22 +1,32 @@
-@import url("https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap");
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-family: "Oxygen", sans-serif;
-}
-
 body {
-  margin: 0;
-  background-color: whitesmoke;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
 }
 
-.centered {
-  margin: 3rem auto;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+nav {
+  background-color: #333;
+  padding: 10px;
+}
+
+nav ul {
+  list-style-type: none;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+aside {
+  width: 200px;
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+aside ul {
+  list-style-type: none;
+}
+
+aside ul li {
+  padding: 10px 0;
 }
