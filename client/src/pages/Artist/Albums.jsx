@@ -33,8 +33,18 @@ const Albums = () => {
       <h2>Your Albums</h2>
       <ul>
         {albums.map((album) => (
-          <li key={album.album_id}>
-            <Link to={`/album/${album.album_id}`}>{album.title}</Link>{" "}
+          <li
+            key={album.album_id}
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            {album.cover && (
+              <img
+                src={`http://localhost:5001/${album.cover}`}
+                alt={`Cover of ${album.title}`}
+                style={{ width: "50px", height: "50px", marginRight: "10px" }}
+              />
+            )}
+            <Link to={`/album/${album.album_id}`}>{album.title}</Link>
           </li>
         ))}
       </ul>

@@ -32,7 +32,17 @@ const Playlists = () => {
       <h2>Your Playlists</h2>
       <ul>
         {playlists.map((playlist) => (
-          <li key={playlist.playlist_id}>
+          <li
+            key={playlist.playlist_id}
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            {playlist.cover && (
+              <img
+                src={`http://localhost:5001/${playlist.cover}`}
+                alt={`Cover of ${playlist.title}`}
+                style={{ width: "50px", height: "50px", marginRight: "10px" }}
+              />
+            )}
             <Link to={`/playlist/${playlist.playlist_id}`}>
               {playlist.title}
             </Link>
