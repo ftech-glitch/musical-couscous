@@ -7,11 +7,13 @@ const {
   deletePlaylist,
   getAllPlaylists,
   getPlaylistById,
+  getPlaylistsByUser,
 } = require("../controllers/playlists");
 const { authUser } = require("../middleware/auth");
 
 router.get("/", authUser, getAllPlaylists);
 router.get("/:id", authUser, getPlaylistById);
+router.get("/user/:user_id", authUser, getPlaylistsByUser);
 router.post(
   "/:user_id",
   playlistUpload.single("cover"),

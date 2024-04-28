@@ -1,64 +1,59 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import MusicPlayer from "../components/MusicPlayer";
 
-function PlaylistsPage({ playlistId }) {
-  const userCtx = useContext(UserContext);
+const PlaylistDetails = () => {
+  const { playlist_id } = useParams();
+  const [playlist, setPlaylist] = useState(null);
   const fetchData = useFetch();
-  const [songs, setSongs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const userCtx = useContext(UserContext);
+  const [selectedSong, setSelectedSong] = useState(null);
 
-  const getSongsInPlaylist = async () => {
-    try {
-      setLoading(true);
-      const res = await fetchData(
-        `/playlist/${playlistId}`,
-        "GET",
-        undefined,
-        userCtx.accessToken
-      );
+  console.log("fetch playlist id", playlist_id);
 
-      if (res.ok) {
-        setSongs(res.data.songs);
-      } else {
-        setError("Failed to fetch songs in playlist");
-      }
-    } catch (err) {
-      setError("Error fetching songs in playlist");
-    } finally {
-      setLoading(false);
+  const fetchSongsInPlaylist = async () => {
+    const res = await fetchData(
+      `/song/playlist/${playlist_id}`,
+      "GET",
+      undefined,
+      userCtx.accessToken
+    );
+    if (res.ok) {
+      setPlaylist(res.data.data || null);
+    } else {
+      console.error("Error fetching playlist:", res.data.message);
     }
   };
 
   useEffect(() => {
-    getSongsInPlaylist();
-  }, [playlistId]); // Fetch songs when playlistId changes
+    fetchSongsInPlaylist();
+  }, [playlist_id]);
 
-  if (loading) {
-    return <div>Loading songs...</div>;
+  if (!playlist) {
+    return <div>Loading playlist...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>; // Display error if there's an issue
-  }
+  const handleSongSelect = (song) => {
+    setSelectedSong(song);
+  };
 
   return (
     <div>
-      <h2>Songs in Playlist</h2>
-      {songs.length === 0 ? (
-        <p>No songs found in this playlist.</p>
-      ) : (
-        <ul>
-          {songs.map((song) => (
-            <li key={song.song_id}>
-              {song.title} by {song.artist}
+      <h2>{playlist.title}</h2>
+      <p>{playlist.content}</p>
+      <ul>
+        {playlist.songs &&
+          playlist.songs.map((song) => (
+            <li key={song.song_id} onClick={() => handleSongSelect(song)}>
+              {song.title}
             </li>
           ))}
-        </ul>
-      )}
+      </ul>
+      <MusicPlayer selectedSong={selectedSong} />
     </div>
   );
-}
+};
 
-export default PlaylistsPage;
+export default PlaylistDetails;

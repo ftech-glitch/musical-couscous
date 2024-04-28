@@ -34,6 +34,23 @@ const getPlaylistById = async (req, res) => {
   }
 };
 
+// get playlists that belongs to user
+const getPlaylistsByUser = async (req, res) => {
+  const { user_id } = req.params;
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM playlists WHERE user_id = $1",
+      [user_id]
+    );
+
+    res.status(200).json({ data: result.rows });
+  } catch (error) {
+    console.error("Error fetching playlists:", error.message);
+    res.status(500).json({ message: "Error fetching playlists" });
+  }
+};
+
 // create playlist
 const createPlaylist = async (req, res) => {
   const { user_id } = req.params;
@@ -139,4 +156,5 @@ module.exports = {
   deletePlaylist,
   getAllPlaylists,
   getPlaylistById,
+  getPlaylistsByUser,
 };

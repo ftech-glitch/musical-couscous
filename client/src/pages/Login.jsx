@@ -25,6 +25,7 @@ const Login = (props) => {
       userCtx.setAccessToken(res.data.access);
       const decoded = jwtDecode(res.data.access);
       userCtx.setRole(decoded.role);
+      userCtx.setUser(decoded.user_id);
 
       navigate("/");
     } else {

@@ -249,7 +249,7 @@ const loginUser = async (req, res) => {
     }
 
     // Generate JWT tokens for authentication
-    const claims = { email: user.email, role: "user" };
+    const claims = { email: user.email, role: "user", user_id: user.user_id };
 
     const access = jwt.sign(claims, process.env.ACCESS_SECRET, {
       expiresIn: "20m",
@@ -294,7 +294,11 @@ const loginArtist = async (req, res) => {
     }
 
     // Generate JWT tokens for authentication
-    const claims = { email: artist.email, role: "artist" };
+    const claims = {
+      email: artist.email,
+      role: "artist",
+      artist_id: artist.artist_id,
+    };
 
     const access = jwt.sign(claims, process.env.ACCESS_SECRET, {
       expiresIn: "20m",

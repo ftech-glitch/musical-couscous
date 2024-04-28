@@ -7,12 +7,14 @@ const {
   createAlbum,
   editAlbum,
   deleteAlbum,
+  getAlbumsByArtist,
 } = require("../controllers/albums");
 
 const router = express.Router();
 
 router.get("/", authArtist, getAllAlbums);
 router.get("/:id", authArtist, getAlbumById);
+router.get("/artist/:artist_id", authArtist, getAlbumsByArtist);
 router.post(
   "/:artist_id",
   albumUpload.single("cover"),
