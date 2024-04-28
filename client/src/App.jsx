@@ -16,6 +16,7 @@ import AlbumForm from "./pages/Artist/AlbumForm";
 import AddSong from "./pages/Artist/AddSong";
 import Box from "@mui/material/Box";
 import Search from "./pages/Search";
+import AddSongToPlaylistPage from "./pages/User/AddSongToPlaylistPage";
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -68,6 +69,10 @@ function App() {
               }
             />
             <Route path="/playlist/new" element={<PlaylistForm />} />
+            <Route
+              path="/playlist/:playlist_id/add-song"
+              element={<AddSongToPlaylistPage />}
+            />
 
             {/* artist routes */}
             <Route path="/artisthome" element={<ArtistHome />} />

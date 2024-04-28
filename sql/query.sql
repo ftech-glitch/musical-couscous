@@ -93,3 +93,12 @@ ALTER COLUMN length TYPE VARCHAR(50) USING length::VARCHAR;
 ALTER TABLE songs
 ADD COLUMN audio_file VARCHAR(255);
 
+CREATE TABLE playlist_songs (
+  playlist_id UUID,
+  song_id UUID,
+  PRIMARY KEY (playlist_id, song_id),
+  CONSTRAINT fk_playlist_id FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id),
+  CONSTRAINT fk_song_id FOREIGN KEY (song_id) REFERENCES songs(song_id)
+);
+
+

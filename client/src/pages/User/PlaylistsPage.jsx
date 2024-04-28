@@ -55,6 +55,28 @@ const PlaylistsPage = ({ onSongSelect }) => {
     return <div>Loading playlist...</div>;
   }
 
+  // delete song from playlist
+  const deleteSongFromPlaylist = async (song_id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to remove this song from the playlist?"
+    );
+    if (!confirmDelete) return;
+
+    const res = await fetchData(
+      `/song/playlist/${playlist_id}/${song_id}`,
+      "DELETE",
+      undefined,
+      userCtx.accessToken
+    );
+
+    if (res.ok) {
+      fetchSongsInPlaylist(); // Refresh the songs in the playlist after deletion
+    } else {
+      setErrorMessage(res.data?.message || "Error removing song from playlist");
+    }
+  };
+
+  // delete playlist
   const deletePlaylist = async () => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this playlist?"
@@ -111,12 +133,22 @@ const PlaylistsPage = ({ onSongSelect }) => {
                   <td>{song.length}</td>
                   <td>
                     <button onClick={() => onSongSelect(song)}>Play</button>
+                    <button
+                      onClick={() => deleteSongFromPlaylist(song.song_id)}
+                      style={{ color: "red" }}
+                    >
+                      Remove
+                    </button>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
+
+      <button onClick={() => navigate(`/playlist/${playlist_id}/add-song`)}>
+        Add Song
+      </button>
       <button onClick={deletePlaylist} style={{ color: "red" }}>
         Delete Playlist
       </button>
