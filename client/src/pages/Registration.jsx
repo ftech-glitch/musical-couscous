@@ -71,7 +71,7 @@ const Registration = (props) => {
       <div className="text-center">
         <p>
           Already have an account?{" "}
-          <a href="/login" onClick={() => props.setShowLogin(true)}>
+          <a href="/" onClick={() => props.setShowLogin(true)}>
             Login
           </a>
         </p>

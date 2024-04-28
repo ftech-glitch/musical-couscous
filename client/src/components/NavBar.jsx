@@ -1,43 +1,58 @@
 import React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Drawer, List, ListItem, ListItemText, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
-const NavBar = () => {
+const NavBar = ({ role }) => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate("/login");
+    navigate("/");
     window.location.reload();
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "black" }}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            ~G.M.~
-          </Typography>
-          <Button color="inherit" onClick={handleLoginClick}>
-            Login
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <Drawer
+      variant="permanent"
+      anchor="left"
+      sx={{
+        width: 200,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: 200,
+          boxSizing: "border-box",
+        },
+      }}
+    >
+      <List>
+        <ListItem button onClick={handleLoginClick}>
+          <ListItemText primary="Login" />
+        </ListItem>
+
+        <Divider />
+
+        {role === "user" && (
+          <>
+            <ListItem button component={Link} to="/userhome">
+              <ListItemText primary="Home" />
+            </ListItem>
+          </>
+        )}
+
+        {role === "artist" && (
+          <>
+            <ListItem button component={Link} to="/artisthome">
+              <ListItemText primary="Home" />
+            </ListItem>
+          </>
+        )}
+
+        {(role === "user" || role === "artist") && (
+          <ListItem button component={Link} to="/search">
+            <ListItemText primary="Search" />
+          </ListItem>
+        )}
+      </List>
+    </Drawer>
   );
 };
 

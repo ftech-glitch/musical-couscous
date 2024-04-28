@@ -14,6 +14,8 @@ import Albums from "./pages/Artist/Albums";
 import AlbumsPage from "./pages/Artist/AlbumsPage";
 import AlbumForm from "./pages/Artist/AlbumForm";
 import AddSong from "./pages/Artist/AddSong";
+import Box from "@mui/material/Box";
+import Search from "./pages/Search";
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -41,41 +43,48 @@ function App() {
       }}
     >
       <Router>
-        <NavBar />
-        <Routes>
-          <Route
-            path="/login"
-            element={<Login setShowLogin={setShowLogin} />}
-          />
-          <Route
-            path="/register"
-            element={<Registration setShowLogin={setShowLogin} />}
-          />
+        <NavBar role={role} />
+        <Box sx={{ ml: 30, padding: 2 }}>
+          <Routes>
+            <Route path="/" element={<Login setShowLogin={setShowLogin} />} />
+            <Route
+              path="/register"
+              element={<Registration setShowLogin={setShowLogin} />}
+            />
+            <Route
+              path="/search"
+              element={
+                <Search onSongSelect={(song) => setSelectedSong(song)} />
+              }
+            />
 
-          {/* user routes */}
-          <Route path="/userhome" element={<UserHome />} />
-          <Route path="/playlists" element={<Playlists />} />
-          <Route
-            path="/playlist/:playlist_id"
-            element={
-              <PlaylistsPage onSongSelect={(song) => setSelectedSong(song)} />
-            }
-          />
-          <Route path="/playlist/new" element={<PlaylistForm />} />
+            {/* user routes */}
+            <Route path="/userhome" element={<UserHome />} />
+            <Route path="/playlists" element={<Playlists />} />
+            <Route
+              path="/playlist/:playlist_id"
+              element={
+                <PlaylistsPage onSongSelect={(song) => setSelectedSong(song)} />
+              }
+            />
+            <Route path="/playlist/new" element={<PlaylistForm />} />
 
-          {/* artist routes */}
-          <Route path="/artisthome" element={<ArtistHome />} />
-          <Route path="albums" element={<Albums />} />
-          <Route
-            path="/album/:album_id"
-            element={
-              <AlbumsPage onSongSelect={(song) => setSelectedSong(song)} />
-            }
-          />
-          <Route path="/album/new" element={<AlbumForm />} />
-          <Route path="/album/:album_id/add-song" element={<AddSong />} />
-        </Routes>
-        {accessToken.length > 0 && <MusicPlayer selectedSong={selectedSong} />}{" "}
+            {/* artist routes */}
+            <Route path="/artisthome" element={<ArtistHome />} />
+            <Route path="albums" element={<Albums />} />
+            <Route
+              path="/album/:album_id"
+              element={
+                <AlbumsPage onSongSelect={(song) => setSelectedSong(song)} />
+              }
+            />
+            <Route path="/album/new" element={<AlbumForm />} />
+            <Route path="/album/:album_id/add-song" element={<AddSong />} />
+          </Routes>
+          {accessToken.length > 0 && (
+            <MusicPlayer selectedSong={selectedSong} />
+          )}{" "}
+        </Box>
       </Router>
     </UserContext.Provider>
   );
