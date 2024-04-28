@@ -2,17 +2,21 @@ import React, { useState, useContext } from "react";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 
-const PlaylistForm = ({ playlist = {}, onSave }) => {
-  const [title, setTitle] = useState(playlist.title || "");
-  const [content, setContent] = useState(playlist.content || "");
+const PlaylistForm = ({ onSave }) => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [cover, setCover] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
 
-  console.log("Playlist Title:", title);
-
   const createPlaylist = async (event) => {
     event.preventDefault();
+
+    if (title.trim() === "") {
+      setErrorMessage("Title is required");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", title);
@@ -21,24 +25,31 @@ const PlaylistForm = ({ playlist = {}, onSave }) => {
       formData.append("cover", cover);
     }
 
-    const endpoint = `/playlist/${userCtx.user_id}`;
+    try {
+      const res = await fetchData(
+        `/playlist/${userCtx.user_id}`,
+        "POST",
+        formData,
+        userCtx.accessToken
+      );
 
-    const res = await fetchData(
-      endpoint,
-      "POST",
-      formData,
-      userCtx.accessToken
-    );
-
-    if (res.ok) {
-      onSave();
-    } else {
-      console.error("Error saving playlist:", res.data?.message);
+      if (res.ok) {
+        setErrorMessage(null);
+        setTitle("");
+        setContent("");
+        setCover(null);
+        onSave();
+      } else {
+        setErrorMessage(res.data?.message || "Error creating playlist");
+      }
+    } catch (error) {
+      setErrorMessage("Error creating playlist");
     }
   };
 
   return (
     <form onSubmit={createPlaylist}>
+      <h2>Create Playlist</h2>
       <div>
         <label>Title:</label>
         <input
@@ -59,7 +70,7 @@ const PlaylistForm = ({ playlist = {}, onSave }) => {
         <label>Cover Image:</label>
         <input type="file" onChange={(e) => setCover(e.target.files[0])} />
       </div>
-      <button type="submit">Create</button>
+      <button type="submit">Create Playlist</button>
     </form>
   );
 };
