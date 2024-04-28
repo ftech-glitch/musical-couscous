@@ -41,7 +41,7 @@ const createPlaylist = async (req, res) => {
   let cover = null;
 
   if (req.file) {
-    cover = `/uploads/playlists/${req.file.filename}`;
+    cover = `playlists/${req.file.filename}`;
   }
 
   try {
@@ -105,7 +105,7 @@ const editPlaylist = async (req, res) => {
   let cover = value.cover; // Default cover from body
 
   if (req.file) {
-    cover = `/uploads/playlists/${req.file.filename}`; // Update if new file uploaded
+    cover = `playlists/${req.file.filename}`; // Update if new file uploaded
   }
 
   try {

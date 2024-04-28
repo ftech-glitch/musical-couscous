@@ -41,7 +41,7 @@ const createAlbum = async (req, res) => {
 
   if (req.file) {
     // Multer file handling
-    cover = `/uploads/albums/${req.file.filename}`;
+    cover = `albums/${req.file.filename}`;
   }
 
   try {
@@ -71,7 +71,7 @@ const editAlbum = async (req, res) => {
   let cover = value.cover; // Default cover from body
 
   if (req.file) {
-    cover = `/uploads/albums/${req.file.filename}`; // Update if new file uploaded
+    cover = `albums/${req.file.filename}`; // Update if new file uploaded
   }
 
   try {

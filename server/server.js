@@ -15,6 +15,11 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/audio", express.static(path.join(__dirname, "./public/audio")));
+app.use("/albums", express.static(path.join(__dirname, "./public/albums")));
+app.use(
+  "/playlists",
+  express.static(path.join(__dirname, "./public/playlists"))
+);
 
 app.use("/auth", authRoutes);
 app.use("/playlist", playlistRoutes);

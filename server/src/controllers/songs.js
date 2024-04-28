@@ -253,6 +253,7 @@ const editSong = async (req, res) => {
   try {
     // Check if an audio file is provided for updating
     const audioFile = req.file;
+    const relativeAudioPath = `audio/${audioFile.filename}`;
 
     let updateQuery;
     let updateValues;
@@ -261,7 +262,14 @@ const editSong = async (req, res) => {
       // If an audio file is provided, include it in the update
       updateQuery =
         "UPDATE songs SET title = $1, genre = $2, length = $3, details = $4, audio_file = $5 WHERE song_id = $6 RETURNING *";
-      updateValues = [title, genre, length, details, audioFile.path, song_id];
+      updateValues = [
+        title,
+        genre,
+        length,
+        details,
+        relativeAudioPath,
+        song_id,
+      ];
     } else {
       // Otherwise, update without changing the audio file
       updateQuery =

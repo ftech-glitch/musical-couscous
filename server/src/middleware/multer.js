@@ -14,7 +14,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Create uploads directory for albums if it doesn't exist
-const albumUploadDir = path.join(__dirname, "../uploads/albums");
+const albumUploadDir = path.join(__dirname, "../../public/albums");
 if (!fs.existsSync(albumUploadDir)) {
   fs.mkdirSync(albumUploadDir, { recursive: true });
 }
@@ -39,7 +39,7 @@ const albumUpload = multer({
 });
 
 // Create uploads directory for playlists if it doesn't exist
-const playlistUploadDir = path.join(__dirname, "../uploads/playlists");
+const playlistUploadDir = path.join(__dirname, "../../public/playlists");
 if (!fs.existsSync(playlistUploadDir)) {
   fs.mkdirSync(playlistUploadDir, { recursive: true });
 }
