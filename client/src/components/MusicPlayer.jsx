@@ -83,8 +83,9 @@ const MusicPlayer = ({ selectedSong }) => {
 
   return (
     <div>
-      <h2>Music Player</h2>
       <p>
+        <hr />
+        <h2>Music Player</h2>
         Now Playing: {currentTrack.title} by {currentTrack.artist}{" "}
       </p>
       <audio ref={audioRef} src={audioFilePath} />
@@ -99,6 +100,7 @@ const MusicPlayer = ({ selectedSong }) => {
         value={volume}
         onChange={handleVolumeChange}
       />
+      <hr />
     </div>
   );
 };

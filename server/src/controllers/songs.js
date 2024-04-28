@@ -97,7 +97,7 @@ const getSongsInPlaylist = async (req, res) => {
     );
 
     const result = await pool.query(
-      "SELECT song_id, title FROM songs WHERE playlist_id = $1",
+      "SELECT song_id, title, artist, album, length FROM songs WHERE playlist_id = $1",
       [playlist_id]
     );
 
