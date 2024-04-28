@@ -4,14 +4,11 @@ import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import MusicPlayer from "../components/MusicPlayer";
 
-const PlaylistDetails = () => {
+const PlaylistsPage = ({ onSongSelect }) => {
   const { playlist_id } = useParams();
   const [playlist, setPlaylist] = useState(null);
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
-  const [selectedSong, setSelectedSong] = useState(null);
-
-  console.log("fetch playlist id", playlist_id);
 
   const fetchSongsInPlaylist = async () => {
     const res = await fetchData(
@@ -20,8 +17,9 @@ const PlaylistDetails = () => {
       undefined,
       userCtx.accessToken
     );
+
     if (res.ok) {
-      setPlaylist(res.data.data || null);
+      setPlaylist(res.data || null);
     } else {
       console.error("Error fetching playlist:", res.data.message);
     }
@@ -35,10 +33,6 @@ const PlaylistDetails = () => {
     return <div>Loading playlist...</div>;
   }
 
-  const handleSongSelect = (song) => {
-    setSelectedSong(song);
-  };
-
   return (
     <div>
       <h2>{playlist.title}</h2>
@@ -46,14 +40,14 @@ const PlaylistDetails = () => {
       <ul>
         {playlist.songs &&
           playlist.songs.map((song) => (
-            <li key={song.song_id} onClick={() => handleSongSelect(song)}>
+            <li key={song.song_id}>
               {song.title}
+              <button onClick={() => onSongSelect(song)}>Play</button>{" "}
             </li>
           ))}
       </ul>
-      <MusicPlayer selectedSong={selectedSong} />
     </div>
   );
 };
 
-export default PlaylistDetails;
+export default PlaylistsPage;

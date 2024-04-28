@@ -17,6 +17,11 @@ function App() {
   const [role, setRole] = useState("");
   const [user_id, setUser] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
+  const [selectedSong, setSelectedSong] = useState(null);
+
+  const handleSongSelect = (song) => {
+    setSelectedSong(song);
+  };
 
   return (
     <UserContext.Provider
@@ -35,7 +40,12 @@ function App() {
             element={<Registration setShowLogin={setShowLogin} />}
           />
           <Route path="/playlists" element={<Playlists />} />
-          <Route path="/playlist/:playlist_id" element={<PlaylistsPage />} />
+          <Route
+            path="/playlist/:playlist_id"
+            element={
+              <PlaylistsPage onSongSelect={(song) => setSelectedSong(song)} />
+            }
+          />
           <Route path="/playlist/new" element={<PlaylistForm />} />
           <Route
             path="/playlists/:playlist_id/edit"
@@ -45,14 +55,7 @@ function App() {
           <Route path="/albums" element={<AlbumsPage />} />
           <Route path="/search" element={<SearchPage />} />
         </Routes>
-        {/* {accessToken.length > 0 && <Home></Home>}
-        {accessToken.length === 0 && showLogin && (
-          <Login setShowLogin={setShowLogin}></Login>
-        )}
-        {accessToken.length === 0 && !showLogin && (
-          <Registration setShowLogin={setShowLogin}></Registration>
-        )} */}
-        {accessToken.length > 0 && <MusicPlayer />}{" "}
+        {accessToken.length > 0 && <MusicPlayer selectedSong={selectedSong} />}{" "}
       </Router>
     </UserContext.Provider>
   );

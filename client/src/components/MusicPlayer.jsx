@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 
-const MusicPlayer = () => {
+const MusicPlayer = ({ selectedSong }) => {
   const [songs, setSongs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -35,6 +35,20 @@ const MusicPlayer = () => {
       }
     }
   }, [isPlaying, currentTrackIndex, volume]);
+
+  // play selected song in other pages
+  useEffect(() => {
+    // If a selected song is provided, find its index in the list of all songs
+    if (selectedSong) {
+      const index = songs.findIndex(
+        (song) => song.song_id === selectedSong.song_id
+      );
+      if (index !== -1) {
+        setCurrentTrackIndex(index);
+        setIsPlaying(true);
+      }
+    }
+  }, [selectedSong, songs]);
 
   const handlePlayPause = () => {
     setIsPlaying((prev) => !prev); // Toggle play/pause

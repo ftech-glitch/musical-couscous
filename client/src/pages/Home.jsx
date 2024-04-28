@@ -4,7 +4,7 @@ import Playlists from "./Playlists";
 function Home() {
   return (
     <div>
-      <h1>Good Morning</h1>
+      <h1>Good Morning.</h1>
       <Playlists />
     </div>
   );

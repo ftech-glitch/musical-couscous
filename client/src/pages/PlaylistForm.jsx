@@ -9,6 +9,8 @@ const PlaylistForm = ({ playlist = {}, onSave }) => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
 
+  console.log("Playlist Title:", title);
+
   const createPlaylist = async (event) => {
     event.preventDefault();
 
