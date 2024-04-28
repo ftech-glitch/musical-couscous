@@ -71,6 +71,10 @@ const AlbumsPage = ({ onSongSelect }) => {
     }
   };
 
+  const handleAddSong = () => {
+    navigate(`/album/${album_id}/add-song`);
+  };
+
   if (!album) {
     return <div>Loading album...</div>;
   }
@@ -120,6 +124,7 @@ const AlbumsPage = ({ onSongSelect }) => {
       <button onClick={deleteAlbum} style={{ color: "red" }}>
         Delete Album
       </button>{" "}
+      <button onClick={handleAddSong}>Add Song</button>
     </div>
   );
 };

@@ -13,6 +13,7 @@ import ArtistHome from "./pages/Artist/Home";
 import Albums from "./pages/Artist/Albums";
 import AlbumsPage from "./pages/Artist/AlbumsPage";
 import AlbumForm from "./pages/Artist/AlbumForm";
+import AddSong from "./pages/Artist/AddSong";
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -72,6 +73,7 @@ function App() {
             }
           />
           <Route path="/album/new" element={<AlbumForm />} />
+          <Route path="/album/:album_id/add-song" element={<AddSong />} />
         </Routes>
         {accessToken.length > 0 && <MusicPlayer selectedSong={selectedSong} />}{" "}
       </Router>
