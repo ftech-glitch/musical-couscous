@@ -2,6 +2,18 @@ const pool = require("../db/db");
 const Joi = require("joi");
 const { v4: uuidv4 } = require("uuid");
 
+// validate UUID
+const isValidUUID = (uuid) => {
+  const uuidRegex =
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  return uuidRegex.test(uuid);
+};
+
+// resolve UUID or convert invalid to null
+const resolveUUID = (uuid) => {
+  return isValidUUID(uuid) ? uuid : null; // Return valid UUID or null
+};
+
 // get all songs
 const getAllSongs = async (req, res) => {
   try {
@@ -131,6 +143,9 @@ const createSong = async (req, res) => {
     return res.status(400).json({ message: "No audio file uploaded" });
   }
 
+  // Convert empty or invalid UUID to null
+  const resolvedPlaylistId = resolveUUID(playlist_id);
+
   try {
     let albumName = album;
     let artistName = artist;
@@ -157,7 +172,7 @@ const createSong = async (req, res) => {
       "INSERT INTO songs (album_id, playlist_id, title, artist, album, genre, length, details, audio_file) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
       [
         album_id,
-        playlist_id || null,
+        resolvedPlaylistId,
         title,
         artistName,
         albumName || null,
