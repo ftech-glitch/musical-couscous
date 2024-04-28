@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
-import UserContext from "../context/user";
+import useFetch from "../../hooks/useFetch";
+import UserContext from "../../context/user";
 
 const PlaylistsPage = ({ onSongSelect }) => {
   const { playlist_id } = useParams();
@@ -12,6 +12,7 @@ const PlaylistsPage = ({ onSongSelect }) => {
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
 
+  // Fetch playlist details
   const fetchPlaylistDetails = async () => {
     const res = await fetchData(
       `/playlist/${playlist_id}`,
@@ -29,6 +30,7 @@ const PlaylistsPage = ({ onSongSelect }) => {
     }
   };
 
+  // Fetch songs in playlist
   const fetchSongsInPlaylist = async () => {
     const res = await fetchData(
       `/song/playlist/${playlist_id}`,
@@ -45,8 +47,8 @@ const PlaylistsPage = ({ onSongSelect }) => {
   };
 
   useEffect(() => {
-    fetchPlaylistDetails(); // Fetch playist details on component mount
-    fetchSongsInPlaylist(); // Fetch songs after fetching details
+    fetchPlaylistDetails();
+    fetchSongsInPlaylist();
   }, [playlist_id]);
 
   if (!playlist) {
@@ -72,8 +74,6 @@ const PlaylistsPage = ({ onSongSelect }) => {
       setErrorMessage(res.data?.message || "Error deleting playlist");
     }
   };
-
-  console.log("Playlist title:", playlist.title);
 
   const coverImageUrl = `http://localhost:5001/${playlistDetails.cover}`;
 

@@ -56,7 +56,10 @@ const getSongsInAlbum = async (req, res) => {
       album_id,
     ]);
 
-    const result = await pool.query("SELECT song_id, title FROM songs");
+    const result = await pool.query(
+      "SELECT song_id, title, artist, album, length FROM songs WHERE album_id = $1",
+      [album_id]
+    );
 
     res.status(200).json({
       status: "success",

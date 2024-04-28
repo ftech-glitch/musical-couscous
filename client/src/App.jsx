@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import MusicPlayer from "./components/MusicPlayer";
-import Home from "./pages/Home";
-import AlbumsPage from "./pages/AlbumsPage";
-import SearchPage from "./pages/SearchPage";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import UserContext from "./context/user";
-import PlaylistsPage from "./pages/PlaylistsPage";
-import PlaylistForm from "./pages/PlaylistForm";
-import Playlists from "./pages/Playlists";
+import PlaylistsPage from "./pages/User/PlaylistsPage";
+import PlaylistForm from "./pages/User/PlaylistForm";
+import Playlists from "./pages/User/Playlists";
+import UserHome from "./pages/User/Home";
+import ArtistHome from "./pages/Artist/Home";
+import Albums from "./pages/Artist/Albums";
+import AlbumsPage from "./pages/Artist/AlbumsPage";
+import AlbumForm from "./pages/Artist/AlbumForm";
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
   const [role, setRole] = useState("");
   const [user_id, setUser] = useState(null);
+  const [artist_id, setArtist] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
   const [selectedSong, setSelectedSong] = useState(null);
 
@@ -25,12 +28,20 @@ function App() {
 
   return (
     <UserContext.Provider
-      value={{ accessToken, setAccessToken, role, setRole, user_id, setUser }}
+      value={{
+        accessToken,
+        setAccessToken,
+        role,
+        setRole,
+        user_id,
+        setUser,
+        artist_id,
+        setArtist,
+      }}
     >
       <Router>
         <NavBar />
         <Routes>
-          <Route path="/" element={<Home />} />
           <Route
             path="/login"
             element={<Login setShowLogin={setShowLogin} />}
@@ -39,6 +50,9 @@ function App() {
             path="/register"
             element={<Registration setShowLogin={setShowLogin} />}
           />
+
+          {/* user routes */}
+          <Route path="/userhome" element={<UserHome />} />
           <Route path="/playlists" element={<Playlists />} />
           <Route
             path="/playlist/:playlist_id"
@@ -47,13 +61,17 @@ function App() {
             }
           />
           <Route path="/playlist/new" element={<PlaylistForm />} />
-          <Route
-            path="/playlists/:playlist_id/edit"
-            element={<PlaylistForm />}
-          />
 
-          <Route path="/albums" element={<AlbumsPage />} />
-          <Route path="/search" element={<SearchPage />} />
+          {/* artist routes */}
+          <Route path="/artisthome" element={<ArtistHome />} />
+          <Route path="albums" element={<Albums />} />
+          <Route
+            path="/album/:album_id"
+            element={
+              <AlbumsPage onSongSelect={(song) => setSelectedSong(song)} />
+            }
+          />
+          <Route path="/album/new" element={<AlbumForm />} />
         </Routes>
         {accessToken.length > 0 && <MusicPlayer selectedSong={selectedSong} />}{" "}
       </Router>

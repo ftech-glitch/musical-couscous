@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
-import UserContext from "../context/user";
+import { Link, useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import UserContext from "../../context/user";
 
 const Playlists = () => {
   const [playlists, setPlaylists] = useState([]);
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
-
-  console.log("User ID", userCtx.user_id);
+  const navigate = useNavigate();
 
   const fetchPlaylistsByUser = async () => {
     const res = await fetchData(
@@ -40,7 +39,9 @@ const Playlists = () => {
           </li>
         ))}
       </ul>
-      <Link to="/playlist/new">Create New Playlist</Link>
+      <button onClick={() => navigate("/playlist/new")}>
+        Create new playlist
+      </button>
     </div>
   );
 };

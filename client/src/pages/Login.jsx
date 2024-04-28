@@ -26,8 +26,14 @@ const Login = (props) => {
       const decoded = jwtDecode(res.data.access);
       userCtx.setRole(decoded.role);
       userCtx.setUser(decoded.user_id);
+      userCtx.setArtist(decoded.artist_id);
 
-      navigate("/");
+      // Navigate to the correct homepage based on the role
+      if (role === "artist") {
+        navigate("/artisthome"); // Navigate to artist's homepage
+      } else {
+        navigate("/userhome"); // Navigate to user's homepage
+      }
     } else {
       alert(JSON.stringify(res.data));
     }

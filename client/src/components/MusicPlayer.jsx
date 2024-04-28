@@ -90,7 +90,9 @@ const MusicPlayer = ({ selectedSong }) => {
       </p>
       <audio ref={audioRef} src={audioFilePath} />
       <button onClick={handlePrev}>Previous</button>
-      <button onClick={handlePlayPause}>{isPlaying ? "Pause" : "Play"}</button>
+      <button onClick={handlePlayPause} style={{ color: "green" }}>
+        {isPlaying ? "Pause" : "Play"}
+      </button>
       <button onClick={handleNext}>Next</button>
       <input
         type="range"

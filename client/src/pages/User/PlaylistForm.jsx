@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
-import useFetch from "../hooks/useFetch";
-import UserContext from "../context/user";
+import { useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import UserContext from "../../context/user";
 
 const PlaylistForm = ({ onSave }) => {
   const [title, setTitle] = useState("");
@@ -9,6 +10,7 @@ const PlaylistForm = ({ onSave }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const createPlaylist = async (event) => {
     event.preventDefault();
