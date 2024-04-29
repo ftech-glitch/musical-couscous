@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../context/user";
+import AddSongToAlbum from "../../components/AddSongToAlbum";
 
 const AlbumsPage = ({ onSongSelect }) => {
   const { album_id } = useParams();
@@ -11,6 +12,7 @@ const AlbumsPage = ({ onSongSelect }) => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
+  const [showAddSong, setShowAddSong] = useState(false);
 
   // Fetch album details
   const fetchAlbumDetails = async () => {
@@ -121,10 +123,15 @@ const AlbumsPage = ({ onSongSelect }) => {
           </tbody>
         </table>
       </div>
+      <button
+        onClick={() => setShowAddSong((prev) => !prev)} // Toggle visibility
+      >
+        {showAddSong ? "Cancel" : "Add Song"}
+      </button>
+      {showAddSong && <AddSongToAlbum fetchSongsInAlbum={fetchSongsInAlbum} />}
       <button onClick={deleteAlbum} style={{ color: "red" }}>
         Delete Album
       </button>{" "}
-      <button onClick={handleAddSong}>Add Song</button>
     </div>
   );
 };

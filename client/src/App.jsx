@@ -13,7 +13,7 @@ import ArtistHome from "./pages/Artist/Home";
 import Albums from "./pages/Artist/Albums";
 import AlbumsPage from "./pages/Artist/AlbumsPage";
 import AlbumForm from "./pages/Artist/AlbumForm";
-import AddSong from "./pages/Artist/AddSong";
+import AddSong from "./components/AddSongToAlbum";
 import Box from "@mui/material/Box";
 import Search from "./pages/Search";
 import AddSongToPlaylistPage from "./components/AddSongToPlaylist";
