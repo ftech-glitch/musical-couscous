@@ -2,7 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../context/user";
-import { MDBInput, MDBBtn } from "mdb-react-ui-kit";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 
 const AlbumEdit = () => {
   const { album_id } = useParams();
@@ -89,30 +96,77 @@ const AlbumEdit = () => {
   }
 
   return (
-    <div>
-      <h2>Edit Album</h2>
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      <form onSubmit={handleUpdateAlbum}>
-        <MDBInput
-          wrapperClass="mb-4"
+    <Box
+      component="form"
+      onSubmit={handleUpdateAlbum}
+      sx={{
+        padding: 3,
+        backgroundColor: "#333",
+        borderRadius: 2,
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+        color: "whitesmoke",
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Edit Album
+      </Typography>
+
+      {errorMessage && (
+        <Snackbar
+          open={!!errorMessage}
+          autoHideDuration={6000}
+          onClose={() => setErrorMessage(null)}
+        >
+          <Alert onClose={() => setErrorMessage(null)} severity="error">
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      )}
+
+      <Box mb={2}>
+        <TextField
           label="Title"
+          variant="outlined"
+          fullWidth
+          required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          required
+          sx={{ backgroundColor: "whitesmoke", color: "#333" }}
         />
-        <MDBInput
-          wrapperClass="mb-4"
+      </Box>
+
+      <Box mb={2}>
+        <TextField
           label="Content"
+          multiline
+          rows={4}
+          variant="outlined"
+          fullWidth
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          sx={{ backgroundColor: "whitesmoke", color: "#333" }}
         />
-        <div>
-          <label>Change Album Cover:</label>
-          <input type="file" onChange={handleCoverChange} />
-        </div>
-        <MDBBtn type="submit">Update Album</MDBBtn>
-      </form>
-    </div>
+      </Box>
+
+      <Box mb={2}>
+        <Typography variant="subtitle1">Change Album Cover:</Typography>
+        <input type="file" onChange={handleCoverChange} />
+      </Box>
+
+      <Button
+        variant="contained"
+        type="submit"
+        sx={{
+          background: "linear-gradient(to right, #444, #222)",
+          color: "whitesmoke",
+          "&:hover": {
+            background: "linear-gradient(to right, #666, #444)",
+          },
+        }}
+      >
+        Update Album
+      </Button>
+    </Box>
   );
 };
 
