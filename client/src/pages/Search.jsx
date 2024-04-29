@@ -61,7 +61,7 @@ const Search = ({ onSongSelect }) => {
         <button type="submit">Search</button>
       </form>
 
-      <h3>Song Results</h3>
+      <h3>Songs:</h3>
       <ul>
         {searchResults.songs.map((song) => (
           <li key={song.song_id}>
@@ -70,7 +70,7 @@ const Search = ({ onSongSelect }) => {
         ))}
       </ul>
 
-      <h3>Playlist Results</h3>
+      <h3>Playlists:</h3>
       <ul>
         {searchResults.playlists.map((playlist) => (
           <li key={playlist.playlist_id}>

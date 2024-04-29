@@ -8,13 +8,14 @@ const searchHandler = async (req, res) => {
       const songsQuery = `
         SELECT * FROM songs 
         WHERE title ILIKE $1 
-        LIMIT 10
+        OR artist ILIKE $1
+        LIMIT 50
       `;
 
       const playlistsQuery = `
         SELECT * FROM playlists 
         WHERE title ILIKE $1 
-        LIMIT 10
+        LIMIT 50
       `;
 
       const songs = await pool.query(songsQuery, [`%${search}%`]);
