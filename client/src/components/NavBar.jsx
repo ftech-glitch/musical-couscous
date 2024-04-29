@@ -50,7 +50,7 @@ const NavBar = ({ role, setIsLoggedIn, isLoggedIn }) => {
               to="/userhome"
               className="nav-link"
             >
-              <ListItemText primary="Your Library" />
+              <ListItemText primary="Library" />
             </ListItem>
           </>
         )}
@@ -62,7 +62,7 @@ const NavBar = ({ role, setIsLoggedIn, isLoggedIn }) => {
               to="/artisthome"
               className="nav-link"
             >
-              <ListItemText primary="Home" />
+              <ListItemText primary="Library" />
             </ListItem>
           </>
         )}
