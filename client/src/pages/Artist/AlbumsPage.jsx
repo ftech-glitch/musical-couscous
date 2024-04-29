@@ -14,6 +14,21 @@ const AlbumsPage = ({ onSongSelect }) => {
   const navigate = useNavigate();
   const [showAddSong, setShowAddSong] = useState(false);
 
+  // get all songs
+  const fetchSongs = async () => {
+    const res = await fetchData("/song", "GET", undefined, userCtx.accessToken);
+
+    if (res.ok) {
+      setSongs(res.data.data || []);
+    } else {
+      console.error("Error fetching songs:", res.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchSongs();
+  }, []);
+
   // Fetch album details
   const fetchAlbumDetails = async () => {
     const res = await fetchData(
@@ -84,6 +99,7 @@ const AlbumsPage = ({ onSongSelect }) => {
 
     if (res.ok) {
       fetchSongsInAlbum(); // Refresh the list of songs in the album
+      fetchSongs();
     } else {
       setErrorMessage(res.data?.message || "Error deleting song from album");
     }
