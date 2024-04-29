@@ -13,10 +13,8 @@ import ArtistHome from "./pages/Artist/Home";
 import Albums from "./pages/Artist/Albums";
 import AlbumsPage from "./pages/Artist/AlbumsPage";
 import AlbumForm from "./pages/Artist/AlbumForm";
-import AddSong from "./components/AddSongToAlbum";
 import Box from "@mui/material/Box";
 import Search from "./pages/Search";
-import AddSongToPlaylistPage from "./components/AddSongToPlaylist";
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -69,10 +67,6 @@ function App() {
               }
             />
             <Route path="/playlist/new" element={<PlaylistForm />} />
-            {/* <Route
-              path="/playlist/:playlist_id/add-song"
-              element={<AddSongToPlaylistPage />}
-            /> */}
 
             {/* artist routes */}
             <Route path="/artisthome" element={<ArtistHome />} />
@@ -84,7 +78,6 @@ function App() {
               }
             />
             <Route path="/album/new" element={<AlbumForm />} />
-            <Route path="/album/:album_id/add-song" element={<AddSong />} />
           </Routes>
           {accessToken.length > 0 && (
             <MusicPlayer selectedSong={selectedSong} />

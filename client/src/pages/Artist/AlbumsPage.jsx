@@ -73,8 +73,20 @@ const AlbumsPage = ({ onSongSelect }) => {
     }
   };
 
-  const handleAddSong = () => {
-    navigate(`/album/${album_id}/add-song`);
+  // delete song from album
+  const deleteSongFromAlbum = async (song_id) => {
+    const res = await fetchData(
+      `/song/${song_id}/${album_id}/${userCtx.artist_id}`,
+      "DELETE",
+      undefined,
+      userCtx.accessToken
+    );
+
+    if (res.ok) {
+      fetchSongsInAlbum(); // Refresh the list of songs in the album
+    } else {
+      setErrorMessage(res.data?.message || "Error deleting song from album");
+    }
   };
 
   if (!album) {
@@ -117,6 +129,12 @@ const AlbumsPage = ({ onSongSelect }) => {
                   <td>{song.length}</td>
                   <td>
                     <button onClick={() => onSongSelect(song)}>Play</button>{" "}
+                    <button
+                      onClick={() => deleteSongFromAlbum(song.song_id)}
+                      style={{ color: "red" }}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
