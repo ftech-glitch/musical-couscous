@@ -27,6 +27,7 @@ const Login = (props) => {
       userCtx.setRole(decoded.role);
       userCtx.setUser(decoded.user_id);
       userCtx.setArtist(decoded.artist_id);
+      userCtx.setUsername(decoded.username);
 
       userCtx.setIsLoggedIn(true);
 

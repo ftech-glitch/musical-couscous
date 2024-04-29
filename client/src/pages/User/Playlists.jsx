@@ -46,8 +46,6 @@ const Playlists = () => {
                   className="playlist-cover"
                 />
               )}
-              <br />
-              <br />
               <div className="playlist-title">{playlist.title}</div>
             </Link>
           </div>

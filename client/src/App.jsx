@@ -24,6 +24,7 @@ function App() {
   const [showLogin, setShowLogin] = useState(true);
   const [selectedSong, setSelectedSong] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
 
   const handleSongSelect = (song) => {
     setSelectedSong(song);
@@ -42,6 +43,8 @@ function App() {
         setArtist,
         isLoggedIn,
         setIsLoggedIn,
+        username,
+        setUsername,
       }}
     >
       <Router>
@@ -60,6 +63,7 @@ function App() {
                   <Login
                     setShowLogin={setShowLogin}
                     setIsLoggedIn={setIsLoggedIn}
+                    setUsername={setUsername}
                   />
                 }
               />
@@ -75,7 +79,10 @@ function App() {
               />
 
               {/* User routes */}
-              <Route path="/userhome" element={<UserHome />} />
+              <Route
+                path="/userhome"
+                element={<UserHome username={username} />}
+              />
               <Route path="/playlists" element={<Playlists />} />
               <Route
                 path="/playlist/:playlist_id"
@@ -88,7 +95,10 @@ function App() {
               <Route path="/playlist/new" element={<PlaylistForm />} />
 
               {/* Artist routes */}
-              <Route path="/artisthome" element={<ArtistHome />} />
+              <Route
+                path="/artisthome"
+                element={<ArtistHome username={username} />}
+              />
               <Route path="albums" element={<Albums />} />
               <Route
                 path="/album/:album_id"
