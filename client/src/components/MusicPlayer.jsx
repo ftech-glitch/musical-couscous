@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faPause,
+  faStepBackward,
+  faStepForward,
+  faVolumeUp,
+  faVolumeDown,
+} from "@fortawesome/free-solid-svg-icons";
 import "./MusicPlayer.css";
 
 const MusicPlayer = ({ selectedSong }) => {
@@ -43,7 +52,7 @@ const MusicPlayer = ({ selectedSong }) => {
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume; // Adjust volume
+      audioRef.current.volume = volume;
       if (isPlaying) {
         audioRef.current.play();
       } else {
@@ -52,37 +61,23 @@ const MusicPlayer = ({ selectedSong }) => {
     }
   }, [isPlaying, currentTrackIndex, volume]);
 
-  // play selected song in other pages
-  useEffect(() => {
-    // If a selected song is provided, find its index in the list of all songs
-    if (selectedSong) {
-      const index = songs.findIndex(
-        (song) => song.song_id === selectedSong.song_id
-      );
-      if (index !== -1) {
-        setCurrentTrackIndex(index);
-        setIsPlaying(true);
-      }
-    }
-  }, [selectedSong, songs]);
-
   const handlePlayPause = () => {
     setIsPlaying((prev) => !prev); // Toggle play/pause
   };
 
   const handleNext = () => {
-    setCurrentTrackIndex((prev) => (prev + 1) % songs.length); // Next track
-    setIsPlaying(true); // Auto-play when switching tracks
+    setCurrentTrackIndex((prev) => (prev + 1) % songs.length);
+    setIsPlaying(true);
   };
 
   const handlePrev = () => {
-    setCurrentTrackIndex((prev) => (prev - 1 + songs.length) % songs.length); // Previous track
+    setCurrentTrackIndex((prev) => (prev - 1 + songs.length) % songs.length);
     setIsPlaying(true);
   };
 
   const handleVolumeChange = (event) => {
     const newVolume = parseFloat(event.target.value);
-    setVolume(newVolume); // Change volume
+    setVolume(newVolume);
   };
 
   const handleTimeUpdate = () => {
@@ -128,11 +123,15 @@ const MusicPlayer = ({ selectedSong }) => {
           onTimeUpdate={handleTimeUpdate}
         />
         <div className="music-player-controls">
-          <button onClick={handlePrev}>&#x25C0;</button> {/* Left arrow */}
-          <button onClick={handlePlayPause} style={{ color: "white" }}>
-            {isPlaying ? "Pause" : "Play"}
+          <button onClick={handlePrev}>
+            <FontAwesomeIcon icon={faStepBackward} />
           </button>
-          <button onClick={handleNext}>&#x25B6;</button> {/* Right arrow */}
+          <button onClick={handlePlayPause} style={{ color: "white" }}>
+            <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
+          </button>
+          <button onClick={handleNext}>
+            <FontAwesomeIcon icon={faStepForward} />
+          </button>
         </div>
         <div className="music-player-slider">
           <input
@@ -141,7 +140,7 @@ const MusicPlayer = ({ selectedSong }) => {
             max="1"
             step="0.01"
             value={progress}
-            onChange={handleProgressChange} // Slider to control song progress
+            onChange={handleProgressChange}
             className="progress-slider"
           />
           <input
@@ -150,9 +149,10 @@ const MusicPlayer = ({ selectedSong }) => {
             max="1"
             step="0.1"
             value={volume}
-            onChange={handleVolumeChange} // Slider for volume control
+            onChange={handleVolumeChange}
             className="volume-slider"
           />
+          <FontAwesomeIcon icon={faVolumeUp} /> {/* Volume icon */}
         </div>
       </div>
     </div>

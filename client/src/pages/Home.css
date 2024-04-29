@@ -1,0 +1,11 @@
+.home-container {
+  padding: 20px; /* Consistent padding */
+  background-color: #333; /* Dark background for retro vibe */
+  color: whitesmoke; /* Retro text color */
+  text-align: center; /* Centered content */
+}
+
+.home-greeting {
+  font-family: "Courier New", Courier, monospace; /* Retro font */
+  font-size: 2em; /* Larger font for the greeting */
+}

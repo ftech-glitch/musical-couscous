@@ -1,0 +1,14 @@
+.MuiDrawer-paper .nav-link {
+  font-family: "Courier New", Courier, monospace;
+  color: whitesmoke;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.nav-link:hover {
+  color: #1db954;
+  text-shadow: 0 0 10px #1db954;
+}
+
+.MuiDrawer-paper {
+  border-right: 2px solid #1db954;
+}

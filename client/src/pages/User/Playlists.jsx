@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../context/user";
+import "./Playlists.css"; // Include custom CSS for styling
 
 const Playlists = () => {
   const [playlists, setPlaylists] = useState([]);
@@ -28,29 +29,36 @@ const Playlists = () => {
   }, [userCtx.user_id]); // re-fetch if user ID changes
 
   return (
-    <div>
+    <div className="playlists-container">
       <h2>Your Playlists</h2>
-      <ul>
+      <div className="playlists-cards">
+        {" "}
         {playlists.map((playlist) => (
-          <li
-            key={playlist.playlist_id}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            {playlist.cover && (
-              <img
-                src={`http://localhost:5001/${playlist.cover}`}
-                alt={`Cover of ${playlist.title}`}
-                style={{ width: "50px", height: "50px", marginRight: "10px" }}
-              />
-            )}
-            <Link to={`/playlist/${playlist.playlist_id}`}>
-              {playlist.title}
+          <div key={playlist.playlist_id} className="playlist-card">
+            <Link
+              to={`/playlist/${playlist.playlist_id}`}
+              className="playlist-link"
+            >
+              {playlist.cover && (
+                <img
+                  src={`http://localhost:5001/${playlist.cover}`}
+                  alt={`Cover of ${playlist.title}`}
+                  className="playlist-cover"
+                />
+              )}
+              <br />
+              <br />
+              <div className="playlist-title">{playlist.title}</div>
             </Link>
-          </li>
+          </div>
         ))}
-      </ul>
-      <button onClick={() => navigate("/playlist/new")}>
-        Create new playlist
+      </div>
+      <br />
+      <button
+        className="create-playlist-btn"
+        onClick={() => navigate("/playlist/new")}
+      >
+        Create New Playlist
       </button>
     </div>
   );

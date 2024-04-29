@@ -1,32 +1,29 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-}
-
-nav {
+  font-family: "Courier New", Courier, monospace;
   background-color: #333;
+  color: whitesmoke;
+  margin: 0;
+  padding: 0;
+}
+
+.app-content {
+  padding: 20px;
+  margin-left: 180px;
+  min-height: calc(100vh - 50px);
+}
+
+.navbar {
+  background: linear-gradient(to right, #333, #111);
+  color: white;
   padding: 10px;
 }
 
-nav ul {
-  list-style-type: none;
+.navbar a {
+  text-decoration: none;
+  color: white;
+  margin-right: 20px;
 }
 
-nav ul li {
-  display: inline-block;
-  margin-right: 10px;
-}
-
-aside {
-  width: 200px;
-  background-color: #f0f0f0;
-  padding: 10px;
-}
-
-aside ul {
-  list-style-type: none;
-}
-
-aside ul li {
-  padding: 10px 0;
+.navbar a:hover {
+  color: #ff4500;
 }

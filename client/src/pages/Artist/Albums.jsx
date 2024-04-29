@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../context/user";
+import "./Albums.css";
 
 const Albums = () => {
   const [albums, setAlbums] = useState([]);
@@ -29,26 +30,32 @@ const Albums = () => {
   }, [userCtx.artist_id]);
 
   return (
-    <div>
+    <div className="container">
       <h2>Your Albums</h2>
-      <ul>
+      <div className="albums-cards">
         {albums.map((album) => (
-          <li
-            key={album.album_id}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            {album.cover && (
-              <img
-                src={`http://localhost:5001/${album.cover}`}
-                alt={`Cover of ${album.title}`}
-                style={{ width: "50px", height: "50px", marginRight: "10px" }}
-              />
-            )}
-            <Link to={`/album/${album.album_id}`}>{album.title}</Link>
-          </li>
+          <div key={album.album_id} className="album-card">
+            <Link to={`/album/${album.album_id}`} className="album-link">
+              {album.cover && (
+                <img
+                  src={`http://localhost:5001/${album.cover}`}
+                  alt={`Cover of ${album.title}`}
+                  className="album-cover"
+                />
+              )}
+              <br />
+              <div className="album-title">{album.title}</div>
+            </Link>
+          </div>
         ))}
-      </ul>
-      <button onClick={() => navigate("/album/new")}>Create New Album</button>{" "}
+      </div>
+      <br />
+      <button
+        className="create-album-btn"
+        onClick={() => navigate("/album/new")}
+      >
+        Create New Album
+      </button>
     </div>
   );
 };

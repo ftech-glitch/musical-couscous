@@ -14,9 +14,9 @@ const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleLogin = async () => {
-    // determine the endpoint based on the selected role
     const endpoint = role === "artist" ? "/auth/login/artist" : "/auth/login";
 
     const res = await fetchData(endpoint, "POST", { email, password });
@@ -30,27 +30,44 @@ const Login = (props) => {
 
       // Navigate to the correct homepage based on the role
       if (role === "artist") {
-        navigate("/artisthome"); // Navigate to artist's homepage
+        navigate("/artisthome");
       } else {
-        navigate("/userhome"); // Navigate to user's homepage
+        navigate("/userhome");
       }
     } else {
-      alert(JSON.stringify(res.data));
+      setErrorMessage(res.data?.message || "Error logging in");
     }
   };
 
   return (
-    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
-      <InputLabel id="role-label">Role</InputLabel>
+    <MDBContainer
+      className="p-3 my-5 d-flex flex-column w-50"
+      style={{ textAlign: "left" }}
+    >
+      <InputLabel
+        id="role-label"
+        sx={{ color: "whitesmoke", marginBottom: "10px" }}
+      >
+        Role
+      </InputLabel>
       <Select
         labelId="role-label"
         value={role}
         onChange={(e) => setRole(e.target.value)}
+        sx={{
+          width: "100%",
+          padding: "0.5px",
+          border: "1px solid whitesmoke",
+          color: "whitesmoke",
+          backgroundColor: "#333",
+          "& .MuiSvgIcon-root": { color: "whitesmoke" },
+        }}
         className="mb-4"
       >
         <MenuItem value="user">User</MenuItem>
         <MenuItem value="artist">Artist</MenuItem>
       </Select>
+
       <MDBInput
         wrapperClass="mb-4"
         label="Email address"
@@ -58,6 +75,7 @@ const Login = (props) => {
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        style={{ borderColor: "whitesmoke" }}
       />
 
       <MDBInput
@@ -67,16 +85,29 @@ const Login = (props) => {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        style={{ borderColor: "whitesmoke" }}
       />
 
-      <MDBBtn className="mb-4" onClick={handleLogin}>
+      {errorMessage && (
+        <div style={{ color: "red", marginBottom: "10px" }}>{errorMessage}</div>
+      )}
+
+      <MDBBtn
+        className="mb-4"
+        onClick={handleLogin}
+        style={{ backgroundColor: "#333", color: "whitesmoke" }}
+      >
         Sign in
       </MDBBtn>
 
       <div className="text-center">
         <p>
           Not a member?{" "}
-          <a href="/register" onClick={() => props.setShowLogin(false)}>
+          <a
+            href="/register"
+            onClick={() => props.setShowLogin(false)}
+            style={{ color: "whitesmoke" }}
+          >
             Register
           </a>
         </p>

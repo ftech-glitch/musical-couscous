@@ -1,0 +1,58 @@
+.container {
+  padding: 20px;
+  background-color: #333;
+  color: whitesmoke;
+  text-align: center;
+}
+
+.albums-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.album-card {
+  background: #444;
+  border-radius: 10px;
+  padding: 10px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.album-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.album-cover {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+}
+
+.album-title {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1em;
+  color: whitesmoke;
+}
+
+.album-link {
+  text-decoration: none;
+  color: whitesmoke;
+}
+
+.create-album-btn {
+  background: linear-gradient(to right, #333, #111);
+  color: whitesmoke;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.create-album-btn:hover {
+  background: linear-gradient(to right, #555, #222);
+}
