@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import UserContext from "../../context/user";
+import AddSongToPlaylist from "../../components/AddSongToPlaylist";
 
 const PlaylistsPage = ({ onSongSelect }) => {
   const { playlist_id } = useParams();
@@ -11,6 +12,7 @@ const PlaylistsPage = ({ onSongSelect }) => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
+  const [showAddSong, setShowAddSong] = useState(false);
 
   // Fetch playlist details
   const fetchPlaylistDetails = async () => {
@@ -57,13 +59,8 @@ const PlaylistsPage = ({ onSongSelect }) => {
 
   // delete song from playlist
   const deleteSongFromPlaylist = async (song_id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to remove this song from the playlist?"
-    );
-    if (!confirmDelete) return;
-
     const res = await fetchData(
-      `/song/playlist/${playlist_id}/${song_id}`,
+      `/song/${song_id}/${playlist_id}/${userCtx.user_id}/remove`,
       "DELETE",
       undefined,
       userCtx.accessToken
@@ -78,11 +75,6 @@ const PlaylistsPage = ({ onSongSelect }) => {
 
   // delete playlist
   const deletePlaylist = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this playlist?"
-    );
-    if (!confirmDelete) return;
-
     const res = await fetchData(
       `/playlist/${playlist_id}/${userCtx.user_id}`,
       "DELETE",
@@ -146,9 +138,14 @@ const PlaylistsPage = ({ onSongSelect }) => {
         </table>
       </div>
 
-      <button onClick={() => navigate(`/playlist/${playlist_id}/add-song`)}>
-        Add Song
+      <button
+        onClick={() => setShowAddSong((prev) => !prev)} // Toggle visibility
+      >
+        {showAddSong ? "Cancel" : "Add Song"}
       </button>
+      {showAddSong && (
+        <AddSongToPlaylist fetchSongsInPlaylist={fetchSongsInPlaylist} />
+      )}
       <button onClick={deletePlaylist} style={{ color: "red" }}>
         Delete Playlist
       </button>

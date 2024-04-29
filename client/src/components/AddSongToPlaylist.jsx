@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
-import UserContext from "../../context/user";
+import { useParams } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+import UserContext from "../context/user";
 
-const AddSongToPlaylistPage = () => {
+const AddSongToPlaylistPage = ({ fetchSongsInPlaylist }) => {
   const { playlist_id } = useParams();
   const [songs, setSongs] = useState([]);
   const [selectedSong, setSelectedSong] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
-  const navigate = useNavigate();
 
   const fetchSongs = async () => {
     const res = await fetchData("/song", "GET", undefined, userCtx.accessToken);
@@ -36,7 +35,7 @@ const AddSongToPlaylistPage = () => {
     );
 
     if (res.ok) {
-      navigate(`/playlist/${playlist_id}`); // Redirect back to the playlist page
+      fetchSongsInPlaylist(); // refresh songs in playlist after adding
     } else {
       setErrorMessage(res.data?.message || "Error adding song to playlist");
     }
@@ -63,7 +62,6 @@ const AddSongToPlaylistPage = () => {
         </select>
       </div>
       <button onClick={handleAddSongToPlaylist}>Add Song</button>
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </div>
   );
 };

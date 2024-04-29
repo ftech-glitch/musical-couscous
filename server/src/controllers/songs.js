@@ -172,36 +172,28 @@ const addSongToPlaylist = async (req, res) => {
 
 // delete song from playlist
 const removeSongFromPlaylist = async (req, res) => {
-  const { song_id, playlist_id } = req.params;
+  const { song_id, playlist_id, user_id } = req.params;
 
   try {
-    // Validate that the song exists
-    const songCheck = await pool.query(
-      "SELECT * FROM songs WHERE song_id = $1",
-      [song_id]
-    );
-
-    if (songCheck.rowCount === 0) {
-      return res.status(404).json({ message: "Song not found" });
-    }
-
-    // Validate that the playlist exists
+    // Ensure the playlist belongs to the current user
     const playlistCheck = await pool.query(
-      "SELECT * FROM playlists WHERE playlist_id = $1",
-      [playlist_id]
+      "SELECT * FROM playlists WHERE playlist_id = $1 AND user_id = $2",
+      [playlist_id, user_id]
     );
 
     if (playlistCheck.rowCount === 0) {
-      return res.status(404).json({ message: "Playlist not found" });
+      return res.status(403).json({
+        message: "Unauthorized: You don't own this playlist",
+      });
     }
 
-    // Delete the record from the join table
-    const result = await pool.query(
+    // Delete the song from the playlist
+    const deleteResult = await pool.query(
       "DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING *",
       [playlist_id, song_id]
     );
 
-    if (result.rowCount === 0) {
+    if (deleteResult.rowCount === 0) {
       return res.status(404).json({
         message: "Song not found in the specified playlist",
       });
@@ -210,13 +202,60 @@ const removeSongFromPlaylist = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "Song removed from playlist",
-      data: result.rows[0],
+      data: deleteResult.rows[0],
     });
   } catch (error) {
-    console.error(error.message);
+    console.error("Error removing song from playlist:", error.message);
     res.status(500).json({ message: "Error removing song from playlist" });
   }
 };
+
+// const removeSongFromPlaylist = async (req, res) => {
+//   const { song_id, playlist_id } = req.params;
+
+//   try {
+//     // Validate that the song exists
+//     const songCheck = await pool.query(
+//       "SELECT * FROM songs WHERE song_id = $1",
+//       [song_id]
+//     );
+
+//     if (songCheck.rowCount === 0) {
+//       return res.status(404).json({ message: "Song not found" });
+//     }
+
+//     // Validate that the playlist exists
+//     const playlistCheck = await pool.query(
+//       "SELECT * FROM playlists WHERE playlist_id = $1",
+//       [playlist_id]
+//     );
+
+//     if (playlistCheck.rowCount === 0) {
+//       return res.status(404).json({ message: "Playlist not found" });
+//     }
+
+//     // Delete the record from the join table
+//     const result = await pool.query(
+//       "DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING *",
+//       [playlist_id, song_id]
+//     );
+
+//     if (result.rowCount === 0) {
+//       return res.status(404).json({
+//         message: "Song not found in the specified playlist",
+//       });
+//     }
+
+//     res.status(200).json({
+//       status: "success",
+//       message: "Song removed from playlist",
+//       data: result.rows[0],
+//     });
+//   } catch (error) {
+//     console.error(error.message);
+//     res.status(500).json({ message: "Error removing song from playlist" });
+//   }
+// };
 
 // create a song
 const createSong = async (req, res) => {
