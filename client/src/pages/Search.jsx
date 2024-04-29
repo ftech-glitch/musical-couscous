@@ -50,18 +50,18 @@ const Search = ({ onSongSelect }) => {
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
-      <h2
+      {/* <h2
         style={{ fontSize: "24px", color: "whitesmoke", textAlign: "center" }}
       >
         Search Music
-      </h2>
+      </h2> */}
       {errorMessage && (
         <p style={{ color: "red", textAlign: "center" }}>{errorMessage}</p>
       )}
       <form onSubmit={handleSearch} style={{ textAlign: "center" }}>
         <input
           type="text"
-          placeholder="Search for songs, artists, playlists..."
+          placeholder="What do you want to play?"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
@@ -85,59 +85,62 @@ const Search = ({ onSongSelect }) => {
         </button>
       </form>
 
-      <div style={{ marginTop: "20px" }}>
-        <h3 style={{ fontSize: "20px", color: "whitesmoke" }}>Songs:</h3>
-        <ul style={{ listStyleType: "none", padding: "0" }}>
-          {searchResults.songs.map((song) => (
-            <li
-              key={song.song_id}
-              style={{
-                padding: "10px",
-                display: "flex",
-                alignItems: "center",
-                borderBottom: "1px solid #ddd",
-              }}
-            >
-              <span>
-                {song.title} by {song.artist}
-              </span>
-              <button
-                onClick={() => handleSongClick(song)}
-                style={{ marginLeft: "auto" }}
+      {searchResults.songs.length > 0 && (
+        <>
+          <h3 style={{ fontSize: "20px", color: "whitesmoke" }}>Songs:</h3>
+          <ul style={{ listStyleType: "none", padding: "0" }}>
+            {searchResults.songs.map((song) => (
+              <li
+                key={song.song_id}
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  borderBottom: "1px solid #ddd",
+                }}
               >
-                <FontAwesomeIcon icon={faPlay} />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+                <span>
+                  {song.title} by {song.artist}
+                </span>
+                <button
+                  onClick={() => handleSongClick(song)}
+                  style={{ marginLeft: "auto" }}
+                >
+                  <FontAwesomeIcon icon={faPlay} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
 
-      <div style={{ marginTop: "20px" }}>
-        <h3 style={{ fontSize: "20px", color: "whitesmoke" }}>Playlists:</h3>
-        <ul style={{ listStyleType: "none", padding: "0" }}>
-          {searchResults.playlists.map((playlist) => (
-            <li
-              key={playlist.playlist_id}
-              style={{
-                padding: "10px",
-                display: "flex",
-                alignItems: "center",
-                borderBottom: "1px solid #ddd",
-              }}
-            >
-              <span>{playlist.title}</span>
-              <button
-                onClick={() => handlePlaylistClick(playlist.playlist_id)}
-                style={{ marginLeft: "auto" }}
+      {searchResults.playlists.length > 0 && (
+        <>
+          <h3 style={{ fontSize: "20px", color: "whitesmoke" }}>Playlists:</h3>
+          <ul style={{ listStyleType: "none", padding: "0" }}>
+            {searchResults.playlists.map((playlist) => (
+              <li
+                key={playlist.playlist_id}
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  borderBottom: "1px solid #ddd",
+                }}
               >
-                View Playlist
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+                <span>{playlist.title}</span>
+                <button
+                  onClick={() => handlePlaylistClick(playlist.playlist_id)}
+                  style={{ marginLeft: "auto" }}
+                >
+                  View Playlist
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 };
-
 export default Search;

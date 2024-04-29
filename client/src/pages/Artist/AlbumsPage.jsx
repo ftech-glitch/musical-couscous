@@ -138,7 +138,9 @@ const AlbumsPage = ({ onSongSelect }) => {
         {showAddSong && (
           <AddSongToAlbum fetchSongsInAlbum={fetchSongsInAlbum} />
         )}
-        <button onClick={() => navigate("/album/edit")}>Edit Album</button>
+        <button onClick={() => navigate(`/album/edit/${album_id}`)}>
+          Edit Album
+        </button>
         <button onClick={deleteAlbum} style={{ color: "red" }}>
           Delete Album
         </button>

@@ -13,7 +13,7 @@ const {
 const router = express.Router();
 
 router.get("/", authArtist, getAllAlbums);
-router.get("/:id", authArtist, getAlbumById);
+router.get("/:album_id", authArtist, getAlbumById);
 router.get("/artist/:artist_id", authArtist, getAlbumsByArtist);
 router.post(
   "/:artist_id",

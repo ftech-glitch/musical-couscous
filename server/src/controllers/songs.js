@@ -130,9 +130,21 @@ const getSongsInPlaylist = async (req, res) => {
 
 // add song to playlist
 const addSongToPlaylist = async (req, res) => {
-  const { song_id, playlist_id } = req.params;
+  const { song_id, playlist_id, user_id } = req.params;
 
   try {
+    // Ensure the playlist belongs to the current user
+    const playlistCheck = await pool.query(
+      "SELECT * FROM playlists WHERE playlist_id = $1 AND user_id = $2",
+      [playlist_id, user_id]
+    );
+
+    if (playlistCheck.rowCount === 0) {
+      return res.status(403).json({
+        message: "Unauthorized: You don't own this playlist",
+      });
+    }
+
     // Validate that the song exists
     const songCheck = await pool.query(
       "SELECT * FROM songs WHERE song_id = $1",
@@ -143,17 +155,7 @@ const addSongToPlaylist = async (req, res) => {
       return res.status(404).json({ message: "Song not found" });
     }
 
-    // Validate that the playlist exists
-    const playlistCheck = await pool.query(
-      "SELECT * FROM playlists WHERE playlist_id = $1",
-      [playlist_id]
-    );
-
-    if (playlistCheck.rowCount === 0) {
-      return res.status(404).json({ message: "Playlist not found" });
-    }
-
-    // Insert a record into the join table
+    // add song to playlist
     const result = await pool.query(
       "INSERT INTO playlist_songs (playlist_id, song_id) VALUES ($1, $2) RETURNING *",
       [playlist_id, song_id]

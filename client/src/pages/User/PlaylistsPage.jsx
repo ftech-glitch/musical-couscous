@@ -80,6 +80,9 @@ const PlaylistsPage = ({ onSongSelect }) => {
     }
   };
 
+  const isPlaylistOwner =
+    playlistDetails && playlistDetails.user_id === userCtx.user_id;
+
   if (!playlist) {
     return <div>Loading playlist...</div>;
   }
@@ -119,30 +122,34 @@ const PlaylistsPage = ({ onSongSelect }) => {
               <td>{song.length}</td>
               <td>
                 <button onClick={() => onSongSelect(song)}>Play</button>{" "}
-                <button
-                  onClick={() => deleteSongFromPlaylist(song.song_id)}
-                  style={{ color: "red" }}
-                >
-                  Remove
-                </button>
+                {isPlaylistOwner && (
+                  <button
+                    onClick={() => deleteSongFromPlaylist(song.song_id)}
+                    style={{ color: "red" }}
+                  >
+                    Remove
+                  </button>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="details-buttons">
-        <button onClick={() => setShowAddSong((prev) => !prev)}>
-          {showAddSong ? "Cancel" : "Add Song"}
-        </button>
+      {isPlaylistOwner && (
+        <div className="details-buttons">
+          <button onClick={() => setShowAddSong((prev) => !prev)}>
+            {showAddSong ? "Cancel" : "Add Song"}
+          </button>
 
-        {showAddSong && (
-          <AddSongToPlaylist fetchSongsInPlaylist={fetchSongsInPlaylist} />
-        )}
+          {showAddSong && (
+            <AddSongToPlaylist fetchSongsInPlaylist={fetchSongsInPlaylist} />
+          )}
 
-        <button onClick={deletePlaylist} style={{ color: "red" }}>
-          Delete Playlist
-        </button>
-      </div>
+          <button onClick={deletePlaylist} style={{ color: "red" }}>
+            Delete Playlist
+          </button>
+        </div>
+      )}
     </div>
   );
 };

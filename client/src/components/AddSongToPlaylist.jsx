@@ -28,7 +28,7 @@ const AddSongToPlaylistPage = ({ fetchSongsInPlaylist }) => {
     }
 
     const res = await fetchData(
-      `/song//${selectedSong}/${playlist_id}/add`,
+      `/song//${selectedSong}/${playlist_id}/${userCtx.user_id}/add`,
       "POST",
       undefined,
       userCtx.accessToken

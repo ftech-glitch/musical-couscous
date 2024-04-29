@@ -6,6 +6,9 @@
   color: whitesmoke;
   text-align: center;
   padding: 15px;
+  display: flex;
+  justify-content: center;
+  margin-right: 15px;
 }
 
 .music-player {

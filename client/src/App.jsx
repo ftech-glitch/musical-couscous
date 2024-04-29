@@ -82,7 +82,7 @@ function App() {
                 }
               />
               <Route path="/album/new" element={<AlbumForm />} />
-              <Route path="/album/edit" element={<AlbumEdit />} />
+              <Route path="/album/edit/:album_id" element={<AlbumEdit />} />
             </Routes>
           </div>
           {accessToken.length > 0 && (

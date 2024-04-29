@@ -15,11 +15,11 @@ const getAllAlbums = async (req, res) => {
 
 // Get album by ID
 const getAlbumById = async (req, res) => {
-  const { id } = req.params;
+  const { album_id } = req.params;
 
   try {
     const album = await pool.query("SELECT * FROM albums WHERE album_id = $1", [
-      id,
+      album_id,
     ]);
 
     if (album.rowCount === 0) {

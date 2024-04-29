@@ -10,11 +10,13 @@ const AlbumEdit = () => {
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
 
-  const [album, setAlbum] = useState(null);
+  const [albumDetails, setAlbumDetails] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [cover, setCover] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  console.log("fetch album_id", album_id);
 
   // Fetch album details
   const fetchAlbumDetails = async () => {
@@ -25,22 +27,28 @@ const AlbumEdit = () => {
       userCtx.accessToken
     );
 
+    console.log("res", res);
+
     if (res.ok) {
-      const data = res.data.data; // set default data to present
-      setAlbum(data);
-      setTitle(data.title);
-      setContent(data.content || "");
+      setAlbumDetails(res.data.data);
+      setTitle(res.data.data.title);
+      setContent(res.data.data.content || "");
     } else {
       setErrorMessage("Error fetching album details");
     }
   };
 
   useEffect(() => {
-    fetchAlbumDetails(); //
+    fetchAlbumDetails();
   }, [album_id]);
 
+  console.log("fetch album details", albumDetails);
+
   const handleCoverChange = (e) => {
-    setCover(e.target.files[0]); // Store the selected cover image
+    if (e.target.files && e.target.files[0]) {
+      // Only update if a new file is selected
+      setCover(e.target.files[0]);
+    }
   };
 
   const handleUpdateAlbum = async (e) => {
@@ -49,8 +57,13 @@ const AlbumEdit = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    if (cover) {
-      formData.append("cover", cover); // Add cover if changed
+
+    // Append the existing cover if no new file is selected
+    if (cover instanceof File) {
+      formData.append("cover", cover); // If it's a new file
+    } else if (albumDetails.cover) {
+      // Keep existing cover
+      formData.append("cover", albumDetails.cover);
     }
 
     try {
@@ -71,7 +84,7 @@ const AlbumEdit = () => {
     }
   };
 
-  if (!album) {
+  if (!albumDetails) {
     return <div>Loading album details...</div>;
   }
 

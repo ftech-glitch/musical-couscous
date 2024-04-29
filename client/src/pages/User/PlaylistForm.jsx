@@ -95,7 +95,7 @@ const PlaylistForm = ({ onSave }) => {
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          sx={{ backgroundColor: "#444", color: "whitesmoke" }}
+          sx={{ backgroundColor: "whitesmoke", color: "#333" }}
         />
       </Box>
       <Box mb={2}>
@@ -107,7 +107,7 @@ const PlaylistForm = ({ onSave }) => {
           fullWidth
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          sx={{ backgroundColor: "#444", color: "whitesmoke" }}
+          sx={{ backgroundColor: "whitesmoke", color: "#333" }}
         />
       </Box>
       <Box mb={2}>

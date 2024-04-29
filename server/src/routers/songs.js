@@ -31,7 +31,7 @@ router.put(
 );
 
 router.get("/playlist/:playlist_id", authUser, getSongsInPlaylist);
-router.post("/:song_id/:playlist_id/add", authUser, addSongToPlaylist);
+router.post("/:song_id/:playlist_id/:user_id/add", authUser, addSongToPlaylist);
 router.delete(
   "/:song_id/:playlist_id/:user_id/remove",
   authUser,
