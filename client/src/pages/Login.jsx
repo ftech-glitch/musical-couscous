@@ -28,6 +28,8 @@ const Login = (props) => {
       userCtx.setUser(decoded.user_id);
       userCtx.setArtist(decoded.artist_id);
 
+      userCtx.setIsLoggedIn(true);
+
       // Navigate to the correct homepage based on the role
       if (role === "artist") {
         navigate("/artisthome");

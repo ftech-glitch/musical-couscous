@@ -23,6 +23,7 @@ function App() {
   const [artist_id, setArtist] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
   const [selectedSong, setSelectedSong] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleSongSelect = (song) => {
     setSelectedSong(song);
@@ -39,15 +40,29 @@ function App() {
         setUser,
         artist_id,
         setArtist,
+        isLoggedIn,
+        setIsLoggedIn,
       }}
     >
       <Router>
-        <NavBar role={role} />
+        <NavBar
+          role={role}
+          setIsLoggedIn={setIsLoggedIn}
+          isLoggedIn={isLoggedIn}
+        />
         <div className="app-content">
           <div className="content-wrapper">
             {" "}
             <Routes>
-              <Route path="/" element={<Login setShowLogin={setShowLogin} />} />
+              <Route
+                path="/"
+                element={
+                  <Login
+                    setShowLogin={setShowLogin}
+                    setIsLoggedIn={setIsLoggedIn}
+                  />
+                }
+              />
               <Route
                 path="/register"
                 element={<Registration setShowLogin={setShowLogin} />}

@@ -143,4 +143,5 @@ const Search = ({ onSongSelect }) => {
     </div>
   );
 };
+
 export default Search;

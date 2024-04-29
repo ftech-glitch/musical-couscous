@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Drawer, List, ListItem, ListItemText, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../context/user";
 import "./NavBar.css";
 
-const NavBar = ({ role }) => {
+const NavBar = ({ role, setIsLoggedIn, isLoggedIn }) => {
   const navigate = useNavigate();
+  const userCtx = useContext(UserContext);
 
-  const handleLoginClick = () => {
-    navigate("/");
-    window.location.reload();
+  const handleLogoutClick = () => {
+    if (userCtx.isLoggedIn) {
+      // logout: Clear session/token, redirect to login
+      userCtx.setAccessToken("");
+      userCtx.setRole("");
+      userCtx.setUser(null);
+      userCtx.setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/");
+    }
+    window.location.reload(); // refresh
   };
 
   return (
@@ -27,8 +38,8 @@ const NavBar = ({ role }) => {
       }}
     >
       <List>
-        <ListItem button onClick={handleLoginClick} className="nav-link">
-          <ListItemText primary="Login" />
+        <ListItem button onClick={handleLogoutClick} className="nav-link">
+          <ListItemText primary={userCtx.isLoggedIn ? "Logout" : "Login"} />
         </ListItem>
         <Divider style={{ background: "#ff4500", color: "whitesmoke" }} />{" "}
         {role === "user" && (
@@ -39,7 +50,7 @@ const NavBar = ({ role }) => {
               to="/userhome"
               className="nav-link"
             >
-              <ListItemText primary="Home" />
+              <ListItemText primary="Your Library" />
             </ListItem>
           </>
         )}
