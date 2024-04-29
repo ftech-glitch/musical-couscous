@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import "./MusicPlayer.css";
 
 const MusicPlayer = ({ selectedSong }) => {
   const [songs, setSongs] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
@@ -21,9 +23,23 @@ const MusicPlayer = ({ selectedSong }) => {
     }
   };
 
+  // Re-fetch the song list if the access token or the selected song changes
   useEffect(() => {
-    fetchSongs();
-  }, []);
+    fetchSongs(); // Refresh the list of songs
+  }, [selectedSong, userCtx.accessToken]);
+
+  // Update the current track based on the selected song and available songs
+  useEffect(() => {
+    if (selectedSong) {
+      const index = songs.findIndex(
+        (song) => song.song_id === selectedSong.song_id
+      );
+      if (index !== -1) {
+        setCurrentTrackIndex(index);
+        setIsPlaying(true);
+      }
+    }
+  }, [songs, selectedSong]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -69,6 +85,22 @@ const MusicPlayer = ({ selectedSong }) => {
     setVolume(newVolume); // Change volume
   };
 
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      const currentTime = audioRef.current.currentTime;
+      const duration = audioRef.current.duration;
+      setProgress(currentTime / duration);
+    }
+  };
+
+  const handleProgressChange = (event) => {
+    const newProgress = parseFloat(event.target.value);
+    setProgress(newProgress);
+    if (audioRef.current) {
+      audioRef.current.currentTime = newProgress * audioRef.current.duration; // Set playback position based on progress
+    }
+  };
+
   if (songs.length === 0) {
     return <div>Loading songs...</div>;
   }
@@ -82,27 +114,47 @@ const MusicPlayer = ({ selectedSong }) => {
   const audioFilePath = `http://localhost:5001/${currentTrack.audio_file}`;
 
   return (
-    <div>
-      <p>
-        <hr />
-        <h2>Music Player</h2>
-        Now Playing: {currentTrack.title} by {currentTrack.artist}{" "}
-      </p>
-      <audio ref={audioRef} src={audioFilePath} />
-      <button onClick={handlePrev}>Previous</button>
-      <button onClick={handlePlayPause} style={{ color: "green" }}>
-        {isPlaying ? "Pause" : "Play"}
-      </button>
-      <button onClick={handleNext}>Next</button>
-      <input
-        type="range"
-        min="0"
-        max="1"
-        step="0.1"
-        value={volume}
-        onChange={handleVolumeChange}
-      />
-      <hr />
+    <div className="music-player-container">
+      <div className="music-player">
+        <div className="music-player-info">
+          <p>
+            Now Playing: {currentTrack.title} by {currentTrack.artist}
+          </p>
+        </div>
+        <audio
+          ref={audioRef}
+          src={audioFilePath}
+          onEnded={handleNext}
+          onTimeUpdate={handleTimeUpdate}
+        />
+        <div className="music-player-controls">
+          <button onClick={handlePrev}>&#x25C0;</button> {/* Left arrow */}
+          <button onClick={handlePlayPause} style={{ color: "white" }}>
+            {isPlaying ? "Pause" : "Play"}
+          </button>
+          <button onClick={handleNext}>&#x25B6;</button> {/* Right arrow */}
+        </div>
+        <div className="music-player-slider">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={progress}
+            onChange={handleProgressChange} // Slider to control song progress
+            className="progress-slider"
+          />
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={volume}
+            onChange={handleVolumeChange} // Slider for volume control
+            className="volume-slider"
+          />
+        </div>
+      </div>
     </div>
   );
 };

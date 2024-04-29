@@ -43,7 +43,7 @@ function App() {
     >
       <Router>
         <NavBar role={role} />
-        <Box sx={{ ml: 30, padding: 2 }}>
+        <Box sx={{ ml: 23, padding: 2 }}>
           <Routes>
             <Route path="/" element={<Login setShowLogin={setShowLogin} />} />
             <Route

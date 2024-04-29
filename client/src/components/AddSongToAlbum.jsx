@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 
@@ -7,13 +7,23 @@ const AddSongToAlbum = ({ fetchSongsInAlbum }) => {
   const { album_id } = useParams();
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
-  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [genre, setGenre] = useState("");
   const [length, setLength] = useState("");
   const [audioFile, setAudioFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [songs, setSongs] = useState([]);
+
+  const fetchSongs = async () => {
+    const res = await fetchData("/song", "GET", undefined, userCtx.accessToken);
+
+    if (res.ok) {
+      setSongs(res.data.data || []);
+    } else {
+      setErrorMessage("Error fetching songs");
+    }
+  };
 
   const handleAddSong = async (event) => {
     event.preventDefault();
@@ -30,7 +40,6 @@ const AddSongToAlbum = ({ fetchSongsInAlbum }) => {
     if (audioFile) {
       formData.append("audio", audioFile);
     }
-
     try {
       const res = await fetchData(
         `/song/:playlist_id/${album_id}/`,
@@ -41,6 +50,7 @@ const AddSongToAlbum = ({ fetchSongsInAlbum }) => {
 
       if (res.ok) {
         fetchSongsInAlbum();
+        fetchSongs();
       } else {
         setErrorMessage(res.data?.message || "Error adding song");
       }
@@ -48,6 +58,10 @@ const AddSongToAlbum = ({ fetchSongsInAlbum }) => {
       setErrorMessage("Error adding song");
     }
   };
+
+  useEffect(() => {
+    fetchSongs();
+  }, []);
 
   return (
     <div>

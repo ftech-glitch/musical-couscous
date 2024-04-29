@@ -6,13 +6,14 @@ import AddSongToAlbum from "../../components/AddSongToAlbum";
 
 const AlbumsPage = ({ onSongSelect }) => {
   const { album_id } = useParams();
-  const [album, setAlbum] = useState(null);
-  const [albumDetails, setAlbumDetails] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
+  const [album, setAlbum] = useState(null);
+  const [albumDetails, setAlbumDetails] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [showAddSong, setShowAddSong] = useState(false);
+  const [songs, setSongs] = useState([]);
 
   // get all songs
   const fetchSongs = async () => {
@@ -24,10 +25,6 @@ const AlbumsPage = ({ onSongSelect }) => {
       console.error("Error fetching songs:", res.data);
     }
   };
-
-  useEffect(() => {
-    fetchSongs();
-  }, []);
 
   // Fetch album details
   const fetchAlbumDetails = async () => {
@@ -41,7 +38,6 @@ const AlbumsPage = ({ onSongSelect }) => {
     if (res.ok) {
       setAlbumDetails(res.data.data);
     } else {
-      setErrorMessage(res.data?.message || "Error fetching album details");
       console.error("Error fetching album details:", res.data?.message);
     }
   };

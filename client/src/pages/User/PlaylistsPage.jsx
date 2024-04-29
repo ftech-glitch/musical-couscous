@@ -23,8 +23,6 @@ const PlaylistsPage = ({ onSongSelect }) => {
       userCtx.accessToken
     );
 
-    console.log("Fetched playlist details:", res);
-
     if (res.ok) {
       setPlaylistDetails(res.data.data);
     } else {

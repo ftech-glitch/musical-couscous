@@ -35,7 +35,8 @@ const AddSongToPlaylistPage = ({ fetchSongsInPlaylist }) => {
     );
 
     if (res.ok) {
-      fetchSongsInPlaylist(); // refresh songs in playlist after adding
+      fetchSongsInPlaylist(); // refresh songs in playlist
+      fetchSongs(); // refresh songs in music player
     } else {
       setErrorMessage(res.data?.message || "Error adding song to playlist");
     }
