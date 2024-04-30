@@ -59,34 +59,6 @@ CREATE TABLE favourites (
   CONSTRAINT fk_song_id FOREIGN KEY (song_id) REFERENCES songs(song_id)
 );
 
-CREATE OR REPLACE FUNCTION update_last_login() 
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.last_login = now();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER set_last_login
-BEFORE UPDATE ON users
-FOR EACH ROW
-WHEN (OLD.last_login IS DISTINCT FROM NEW.last_login)
-EXECUTE FUNCTION update_last_login();
-
-CREATE OR REPLACE FUNCTION update_artist_last_login() 
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.last_login = now();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER set_artist_last_login
-BEFORE UPDATE ON artists
-FOR EACH ROW
-WHEN (OLD.last_login IS DISTINCT FROM NEW.last_login)
-EXECUTE FUNCTION update_artist_last_login();
-
 ALTER TABLE songs
 ALTER COLUMN length TYPE VARCHAR(50) USING length::VARCHAR;
 
