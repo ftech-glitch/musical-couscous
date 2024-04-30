@@ -4,6 +4,9 @@ import useFetch from "../../hooks/useFetch";
 import UserContext from "../../context/user";
 import AddSongToAlbum from "../../components/AddSongToAlbum";
 import "./AlbumsPage.css";
+import { faStar as faSolidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faRegularStar } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const AlbumsPage = ({ onSongSelect }) => {
   const { album_id } = useParams();
@@ -14,6 +17,7 @@ const AlbumsPage = ({ onSongSelect }) => {
   const [albumDetails, setAlbumDetails] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [showAddSong, setShowAddSong] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
 
   const fetchAlbumDetails = async () => {
     const res = await fetchData(
@@ -45,9 +49,60 @@ const AlbumsPage = ({ onSongSelect }) => {
     }
   };
 
+  const checkIfFavorited = async () => {
+    // Endpoint to get all favorite albums for the user/artist
+    const favoriteEndpoint =
+      userCtx.role === "artist"
+        ? `/favorite/artist/${userCtx.artist_id}`
+        : `/favorite/user/${userCtx.user_id}`;
+
+    const res = await fetchData(
+      favoriteEndpoint,
+      "GET",
+      undefined,
+      userCtx.accessToken
+    );
+
+    if (res.ok) {
+      const favoriteAlbums = res.data;
+      const isFav = favoriteAlbums.some(
+        (favAlbum) => favAlbum.album_id === album_id
+      );
+      setIsFavorited(isFav);
+    } else {
+      setErrorMessage("Error checking favorite status.");
+    }
+  };
+
+  const toggleFavorite = async () => {
+    const endpoint = isFavorited
+      ? userCtx.role === "artist"
+        ? `/favorite/artist/${userCtx.artist_id}/${album_id}`
+        : `/favorite/user/${userCtx.user_id}/${album_id}`
+      : userCtx.role === "artist"
+      ? `/favorite/artist/${userCtx.artist_id}/${album_id}`
+      : `/favorite/user/${userCtx.user_id}/${album_id}`;
+
+    const method = isFavorited ? "DELETE" : "POST";
+
+    const res = await fetchData(
+      endpoint,
+      method,
+      undefined,
+      userCtx.accessToken
+    );
+
+    if (res.ok) {
+      setIsFavorited(!isFavorited);
+    } else {
+      setErrorMessage("Error toggling favorite status.");
+    }
+  };
+
   useEffect(() => {
     fetchAlbumDetails();
     fetchSongsInAlbum();
+    checkIfFavorited();
   }, [album_id]);
 
   const deleteAlbum = async () => {
@@ -102,6 +157,21 @@ const AlbumsPage = ({ onSongSelect }) => {
       <h2 className="details-title">{albumDetails.title}</h2>
       <h6 className="details-content">{albumDetails.content}</h6>
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+
+      <div className="favorite-button-container">
+        <button
+          onClick={toggleFavorite}
+          style={{ background: "none", border: "none" }}
+        >
+          <FontAwesomeIcon
+            icon={isFavorited ? faSolidStar : faRegularStar}
+            style={{
+              color: isFavorited ? "#FFD700" : "gray",
+              fontSize: "24px",
+            }}
+          />
+        </button>
+      </div>
 
       <table className="details-table">
         <thead>
