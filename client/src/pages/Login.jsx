@@ -5,6 +5,7 @@ import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import logo from "./gm.png";
 
 const Login = (props) => {
   const fetchData = useFetch();
@@ -45,7 +46,15 @@ const Login = (props) => {
   return (
     <>
       <div className="home-container">
-        <h1 className="home-greeting">Good Morning, Guest.</h1>
+        <img
+          src={logo}
+          alt="Logo"
+          style={{
+            width: "200px",
+            height: "auto",
+          }}
+        />
+        {/* <h1 className="home-greeting">Good Morning, Guest.</h1> */}
       </div>
       <MDBContainer
         className="p-3 my-5 d-flex flex-column w-50"
