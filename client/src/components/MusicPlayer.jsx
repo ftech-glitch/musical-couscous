@@ -96,6 +96,12 @@ const MusicPlayer = ({ selectedSong }) => {
     }
   };
 
+  const handleThumbHover = (event) => {
+    // Randomly shift the thumb's position
+    const newPosition = Math.random() * 100;
+    event.target.style.setProperty("--thumb-position", `${newPosition}%`);
+  };
+
   if (songs.length === 0) {
     return <div>Loading songs...</div>;
   }
@@ -149,6 +155,7 @@ const MusicPlayer = ({ selectedSong }) => {
             max="1"
             step="0.1"
             value={volume}
+            onMouseOver={handleThumbHover}
             onChange={handleVolumeChange}
             className="volume-slider"
           />

@@ -85,6 +85,9 @@ const AlbumsPage = ({ onSongSelect }) => {
     }
   };
 
+  const isAlbumOwner =
+    albumDetails && albumDetails.artist_id === userCtx.artist_id;
+
   if (!album) {
     return <div>Loading album...</div>;
   }
@@ -119,32 +122,35 @@ const AlbumsPage = ({ onSongSelect }) => {
               <td>{song.length}</td>
               <td>
                 <button onClick={() => onSongSelect(song)}>Play</button>
-                <button
-                  onClick={() => deleteSongFromAlbum(song.song_id)}
-                  style={{ color: "red" }}
-                >
-                  Delete
-                </button>
+                {isAlbumOwner && (
+                  <button
+                    onClick={() => deleteSongFromAlbum(song.song_id)}
+                    style={{ color: "red" }}
+                  >
+                    Delete
+                  </button>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <div className="details-buttons">
-        <button onClick={() => setShowAddSong((prev) => !prev)}>
-          {showAddSong ? "Cancel" : "Add Song"}
-        </button>
-        {showAddSong && (
-          <AddSongToAlbum fetchSongsInAlbum={fetchSongsInAlbum} />
-        )}
-        <button onClick={() => navigate(`/album/edit/${album_id}`)}>
-          Edit Album
-        </button>
-        <button onClick={deleteAlbum} style={{ color: "red" }}>
-          Delete Album
-        </button>
-      </div>
+      {isAlbumOwner && (
+        <div className="details-buttons">
+          <button onClick={() => setShowAddSong((prev) => !prev)}>
+            {showAddSong ? "Cancel" : "Add Song"}
+          </button>
+          {showAddSong && (
+            <AddSongToAlbum fetchSongsInAlbum={fetchSongsInAlbum} />
+          )}
+          <button onClick={() => navigate(`/album/edit/${album_id}`)}>
+            Edit Album
+          </button>
+          <button onClick={deleteAlbum} style={{ color: "red" }}>
+            Delete Album
+          </button>
+        </div>
+      )}
     </div>
   );
 };

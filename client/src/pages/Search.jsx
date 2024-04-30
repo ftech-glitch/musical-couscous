@@ -10,6 +10,7 @@ const Search = ({ onSongSelect }) => {
   const [searchResults, setSearchResults] = useState({
     songs: [],
     playlists: [],
+    albums: [],
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const fetchData = useFetch();
@@ -38,6 +39,8 @@ const Search = ({ onSongSelect }) => {
     }
   };
 
+  console.log("album query", searchResults.albums);
+
   const handleSongClick = (song) => {
     if (onSongSelect) {
       onSongSelect(song); // Trigger the music player to play the song
@@ -46,6 +49,10 @@ const Search = ({ onSongSelect }) => {
 
   const handlePlaylistClick = (playlist_id) => {
     navigate(`/playlist/${playlist_id}`); // Navigate to the specific playlist
+  };
+
+  const handleAlbumClick = (album_id) => {
+    navigate(`/album/${album_id}`); // Navigate to album page
   };
 
   return (
@@ -134,6 +141,34 @@ const Search = ({ onSongSelect }) => {
                   style={{ marginLeft: "auto" }}
                 >
                   View Playlist
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {searchResults.albums?.length > 0 && (
+        <>
+          <h3 style={{ fontSize: "20px", color: "whitesmoke" }}>Albums:</h3>
+          <ul style={{ listStyleType: "none", padding: "0" }}>
+            {searchResults.albums.map((album) => (
+              <li
+                key={album.album_id}
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                <span>
+                  {album.title} by {album.artist_username}
+                </span>
+                <button
+                  onClick={() => handleAlbumClick(album.album_id)}
+                  style={{ marginLeft: "auto" }}
+                >
+                  View Album
                 </button>
               </li>
             ))}

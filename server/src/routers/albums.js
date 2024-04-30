@@ -1,6 +1,6 @@
 const express = require("express");
 const { albumUpload } = require("../middleware/multer");
-const { authArtist } = require("../middleware/auth");
+const { authArtist, authUser } = require("../middleware/auth");
 const {
   getAlbumById,
   getAllAlbums,
@@ -12,9 +12,9 @@ const {
 
 const router = express.Router();
 
-router.get("/", authArtist, getAllAlbums);
-router.get("/:album_id", authArtist, getAlbumById);
-router.get("/artist/:artist_id", authArtist, getAlbumsByArtist);
+router.get("/", authUser, getAllAlbums);
+router.get("/:album_id", authUser, getAlbumById);
+router.get("/artist/:artist_id", authUser, getAlbumsByArtist);
 router.post(
   "/:artist_id",
   albumUpload.single("cover"),
