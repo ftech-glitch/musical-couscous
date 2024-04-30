@@ -73,4 +73,19 @@ CREATE TABLE playlist_songs (
   CONSTRAINT fk_song_id FOREIGN KEY (song_id) REFERENCES songs(song_id)
 );
 
+CREATE TABLE favorites (
+  favorite_id UUID PRIMARY KEY,
+  user_id UUID NOT NULL,
+  album_id UUID NOT NULL,
+  CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id),
+  CONSTRAINT fk_album FOREIGN KEY (album_id) REFERENCES albums(album_id)
+);
+
+CREATE TABLE favorites_artist (
+  favorite_id UUID PRIMARY KEY,
+  artist_id UUID NOT NULL,
+  album_id UUID NOT NULL,
+  CONSTRAINT fk_artist FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+  CONSTRAINT fk_album FOREIGN KEY (album_id) REFERENCES albums(album_id)
+);
 
