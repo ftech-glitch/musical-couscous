@@ -15,6 +15,7 @@ import AlbumsPage from "./pages/Artist/AlbumsPage";
 import AlbumForm from "./pages/Artist/AlbumForm";
 import Search from "./pages/Search";
 import AlbumEdit from "./pages/Artist/AlbumEdit";
+import Game from "./components/Game";
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
@@ -77,11 +78,14 @@ function App() {
                   <Search onSongSelect={(song) => setSelectedSong(song)} />
                 }
               />
+              <Route path="/game" element={<Game />} />
 
               {/* User routes */}
               <Route
                 path="/userhome"
-                element={<UserHome username={username} />}
+                element={
+                  <UserHome username={username} isLoggedIn={isLoggedIn} />
+                }
               />
               <Route path="/playlists" element={<Playlists />} />
               <Route
@@ -97,7 +101,9 @@ function App() {
               {/* Artist routes */}
               <Route
                 path="/artisthome"
-                element={<ArtistHome username={username} />}
+                element={
+                  <ArtistHome username={username} isLoggedIn={isLoggedIn} />
+                }
               />
               <Route path="albums" element={<Albums />} />
               <Route
