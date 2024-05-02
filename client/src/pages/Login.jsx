@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import { Select, MenuItem, InputLabel } from "@mui/material";
+import { Select, MenuItem, InputLabel, Snackbar, Alert } from "@mui/material";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import { jwtDecode } from "jwt-decode";
@@ -16,6 +16,9 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
   const [errorMessage, setErrorMessage] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
 
   const handleLogin = async () => {
     const endpoint = role === "artist" ? "/auth/login/artist" : "/auth/login";
@@ -29,8 +32,11 @@ const Login = (props) => {
       userCtx.setUser(decoded.user_id);
       userCtx.setArtist(decoded.artist_id);
       userCtx.setUsername(decoded.username);
-
       userCtx.setIsLoggedIn(true);
+
+      setSnackbarSeverity("success");
+      setSnackbarMessage("Login successful! Redirecting...");
+      setSnackbarOpen(true);
 
       // Navigate to the correct homepage based on the role
       if (role === "artist") {
@@ -39,8 +45,16 @@ const Login = (props) => {
         navigate("/userhome");
       }
     } else {
-      setErrorMessage(res.data?.message || "Error logging in");
+      setSnackbarSeverity("error");
+      setSnackbarMessage(
+        res.data?.message || "Error logging in. Please try again."
+      );
+      setSnackbarOpen(true);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -131,6 +145,17 @@ const Login = (props) => {
           </p>
         </div>
       </MDBContainer>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

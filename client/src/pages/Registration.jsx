@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import { Select, MenuItem, InputLabel } from "@mui/material";
+import { Select, MenuItem, InputLabel, Snackbar, Alert } from "@mui/material";
 import useFetch from "../hooks/useFetch";
 
 const Registration = (props) => {
@@ -11,6 +11,13 @@ const Registration = (props) => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
   const [errorMessage, setErrorMessage] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   const registerUser = async () => {
     const res = await fetchData("/auth/register", "POST", {
@@ -21,13 +28,21 @@ const Registration = (props) => {
     });
 
     if (res.ok) {
+      setSnackbarMessage("Registration successful! You can now log in.");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+
       // Clear input fields after successful registration
       setEmail("");
       setUsername("");
       setPassword("");
       setRole("user");
     } else {
-      setErrorMessage(res.data?.message || "Error during registration.");
+      setSnackbarMessage(
+        res.data?.message || "Registration failed. Please try again."
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -118,6 +133,17 @@ const Registration = (props) => {
           </p>
         </div>
       </MDBContainer>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
