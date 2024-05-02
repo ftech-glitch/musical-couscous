@@ -19,6 +19,13 @@ const AlbumForm = ({ onSave }) => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const createAlbum = async (event) => {
     event.preventDefault();
@@ -35,28 +42,29 @@ const AlbumForm = ({ onSave }) => {
       formData.append("cover", cover);
     }
 
-    try {
-      const res = await fetchData(
-        `/album/${userCtx.artist_id}`,
-        "POST",
-        formData,
-        userCtx.accessToken
-      );
+    const res = await fetchData(
+      `/album/${userCtx.artist_id}`,
+      "POST",
+      formData,
+      userCtx.accessToken
+    );
 
-      if (res.ok) {
-        setErrorMessage(null);
-        setTitle("");
-        setContent("");
-        setCover(null);
-        if (onSave) {
-          onSave();
-        }
-        navigate("/albums");
-      } else {
-        setErrorMessage(res.data?.message || "Error creating album");
+    if (res.ok) {
+      setSnackbarMessage("Album created successfully!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+
+      setTitle("");
+      setContent("");
+      setCover(null);
+      if (onSave) {
+        onSave();
       }
-    } catch (error) {
-      setErrorMessage("Error creating album");
+      navigate("/albums");
+    } else {
+      setSnackbarMessage(res.data?.message || "Error creating album.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -76,17 +84,6 @@ const AlbumForm = ({ onSave }) => {
       <Typography variant="h4" gutterBottom>
         Create Album
       </Typography>
-      {errorMessage && (
-        <Snackbar
-          open={!!errorMessage}
-          autoHideDuration={6000}
-          onClose={() => setErrorMessage(null)}
-        >
-          <Alert onClose={() => setErrorMessage(null)} severity="error">
-            {errorMessage}
-          </Alert>
-        </Snackbar>
-      )}
       <Box mb={2}>
         <TextField
           label="Title"
@@ -127,6 +124,17 @@ const AlbumForm = ({ onSave }) => {
       >
         Create Album
       </Button>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

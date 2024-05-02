@@ -7,17 +7,25 @@ import "./AlbumsPage.css";
 import { faStar as faSolidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faRegularStar } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Snackbar, Alert, Box } from "@mui/material";
 
 const AlbumsPage = ({ onSongSelect }) => {
   const { album_id } = useParams();
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(null);
   const [album, setAlbum] = useState(null);
   const [albumDetails, setAlbumDetails] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [showAddSong, setShowAddSong] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const fetchAlbumDetails = async () => {
     const res = await fetchData(
@@ -94,8 +102,14 @@ const AlbumsPage = ({ onSongSelect }) => {
 
     if (res.ok) {
       setIsFavorited(!isFavorited);
+      const message = isFavorited ? "Album unfavourited." : "Album favourited!";
+      setSnackbarMessage(message);
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     } else {
-      setErrorMessage("Error toggling favorite status.");
+      setSnackbarMessage("Error favouriting album");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -136,7 +150,9 @@ const AlbumsPage = ({ onSongSelect }) => {
     if (res.ok) {
       fetchSongsInAlbum();
     } else {
-      setErrorMessage("Error deleting song from album.");
+      setSnackbarMessage("Error deleting album");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -156,7 +172,17 @@ const AlbumsPage = ({ onSongSelect }) => {
       )}
       <h2 className="details-title">{albumDetails.title}</h2>
       <h6 className="details-content">{albumDetails.content}</h6>
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       <div className="favorite-button-container">
         <button

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import { TextField, Button, Typography, Box } from "@mui/material";
 
 const AddSongToPlaylistPage = ({ fetchSongsInPlaylist }) => {
   const { playlist_id } = useParams();
@@ -47,12 +48,31 @@ const AddSongToPlaylistPage = ({ fetchSongsInPlaylist }) => {
   }, []);
 
   return (
-    <div>
-      <h2>Add Song to Playlist</h2>
-      <div>
-        <select
+    <Box
+      sx={{
+        padding: 3,
+        backgroundColor: "#333",
+        borderRadius: 2,
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+        color: "whitesmoke",
+        fontFamily: "Courier New, monospace",
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Add Song to Playlist
+      </Typography>
+
+      <Box mb={2}>
+        <TextField
+          select
+          fullWidth
+          label="Select a Song"
           value={selectedSong}
           onChange={(e) => setSelectedSong(e.target.value)}
+          sx={{ backgroundColor: "whitesmoke", color: "#333" }}
+          SelectProps={{
+            native: true,
+          }}
         >
           <option value="">Select a song</option>
           {songs.map((song) => (
@@ -60,10 +80,23 @@ const AddSongToPlaylistPage = ({ fetchSongsInPlaylist }) => {
               {song.title} by {song.artist}
             </option>
           ))}
-        </select>
-      </div>
-      <button onClick={handleAddSongToPlaylist}>Add Song</button>
-    </div>
+        </TextField>
+      </Box>
+
+      <Button
+        variant="contained"
+        onClick={handleAddSongToPlaylist}
+        sx={{
+          background: "linear-gradient(to right, #444, #222)",
+          color: "whitesmoke",
+          "&:hover": {
+            background: "linear-gradient(to right, #666, #444)",
+          },
+        }}
+      >
+        Add Song
+      </Button>
+    </Box>
   );
 };
 

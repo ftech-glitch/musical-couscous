@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import { TextField, Button, Typography, Box } from "@mui/material";
 
 const AddSongToAlbum = ({ fetchSongsInAlbum }) => {
   const { album_id } = useParams();
@@ -64,44 +65,73 @@ const AddSongToAlbum = ({ fetchSongsInAlbum }) => {
   }, []);
 
   return (
-    <div>
-      <h2>Add New Song</h2>
+    <Box
+      sx={{
+        padding: 3,
+        backgroundColor: "#333",
+        borderRadius: 2,
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+        color: "whitesmoke",
+        fontFamily: "Courier New, monospace",
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Add New Song
+      </Typography>
       <form onSubmit={handleAddSong}>
-        <div>
-          <label>Title:</label>
-          <input
-            type="text"
+        <Box mb={2}>
+          <TextField
+            label="Title"
+            variant="outlined"
+            fullWidth
+            required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            required
+            sx={{ backgroundColor: "whitesmoke", color: "#333" }}
           />
-        </div>
-        <div>
-          <label>Genre:</label>
-          <input
-            type="text"
+        </Box>
+        <Box mb={2}>
+          <TextField
+            label="Genre"
+            variant="outlined"
+            fullWidth
             value={genre}
             onChange={(e) => setGenre(e.target.value)}
+            sx={{ backgroundColor: "whitesmoke", color: "#333" }}
           />
-        </div>
-        <div>
-          <label>Length:</label>
-          <input
-            type="text"
+        </Box>
+        <Box mb={2}>
+          <TextField
+            label="Length"
+            variant="outlined"
+            fullWidth
             value={length}
             onChange={(e) => setLength(e.target.value)}
+            sx={{ backgroundColor: "whitesmoke", color: "#333" }}
           />
-        </div>
-        <div>
-          <label>Audio File:</label>
+        </Box>
+        <Box mb={2}>
+          <Typography variant="subtitle1">Audio File:</Typography>
           <input
             type="file"
             onChange={(e) => setAudioFile(e.target.files[0])}
           />
-        </div>
-        <button type="submit">Add Song</button>
+        </Box>
+        <Button
+          variant="contained"
+          type="submit"
+          sx={{
+            background: "linear-gradient(to right, #444, #222)",
+            color: "whitesmoke",
+            "&:hover": {
+              background: "linear-gradient(to right, #666, #444)",
+            },
+          }}
+        >
+          Add Song
+        </Button>
       </form>
-    </div>
+    </Box>
   );
 };
 
