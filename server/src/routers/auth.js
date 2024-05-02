@@ -9,6 +9,12 @@ const {
   editUser,
   editArtist,
 } = require("../controllers/auth");
+const {
+  validateRegistrationData,
+  validateLoginData,
+  validateRefreshToken,
+} = require("../validators/auth");
+const { errorCheck } = require("../validators/errorCheck");
 const router = express.Router();
 
 router.get("/users", getAllUsers);
@@ -16,9 +22,9 @@ router.get("/artists", getAllArtists);
 router.put("/user/:user_id", editUser);
 router.put("/artist/:artist_id", editArtist);
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.post("/refresh", refresh);
-router.post("/login/artist", loginArtist);
+router.post("/register", validateRegistrationData, errorCheck, registerUser);
+router.post("/login", validateLoginData, errorCheck, loginUser);
+router.post("/refresh", validateRefreshToken, errorCheck, refresh);
+router.post("/login/artist", validateLoginData, errorCheck, loginArtist);
 
 module.exports = router;

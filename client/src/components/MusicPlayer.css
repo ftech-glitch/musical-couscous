@@ -74,17 +74,6 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-/* .volume-slider.flying::-webkit-slider-thumb {
-  position: absolute;
-  transform: translateY(-200px); /* Make the thumb fly off the slider */
-  transition: all 0.3s ease; Smooth animation */
-}
-
-.volume-slider.flying::-webkit-slider-thumb {
-  position: absolute;
-  transition: all 0.5s ease; // Allows the thumb to move smoothly
-}
-
 .reset-thumb-btn {
   background: #444;
   color: whitesmoke;
