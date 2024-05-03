@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/user";
 import "./NavBar.css";
 import ghost from "./ghost.png";
+import logo from "./gm.png";
 
 const NavBar = ({ role, setIsLoggedIn, isLoggedIn }) => {
   const navigate = useNavigate();
@@ -45,6 +46,16 @@ const NavBar = ({ role, setIsLoggedIn, isLoggedIn }) => {
         },
       }}
     >
+      {userCtx.isLoggedIn && (
+        <img
+          src={logo}
+          alt="Logo"
+          style={{
+            width: "120px",
+            height: "auto",
+          }}
+        />
+      )}
       <List>
         <ListItem button onClick={handleLogoutClick} className="nav-link">
           <ListItemText primary={userCtx.isLoggedIn ? "Logout" : "Login"} />
