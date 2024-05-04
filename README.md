@@ -48,66 +48,66 @@ npm install
 ```
 
 React and related dependencies
-(```)
+```
 npm install react react-dom
 npm install jwt-decode
-(```)
+```
 
 UI and styling frameworks
-(```)
+```
 npm install @mui/material @emotion/react @emotion/styled
 npm install mdb-react-ui-kit
 npm install styled-components
 npm install @fortawesome/free-regular-svg-icons @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
 npm install react-beautiful-dnd
-(```)
+```
 
 Server:
 cd server/
-(```)
+```
 npm install
-(```)
+```
 
 Express and related middleware
-(```)
+```
 npm install express
 npm install dotenv
 npm install cors
 npm install express-rate-limit
 npm install helmet
-(```)
+```
 
 Authentication and encryption
-(```)
+```
 npm install jsonwebtoken jwt-decode
 npm install bcrypt
-(```)
+```
 
 Database and ORM
-(```)
+```
 npm install pg
 npm install sequelize
-(```)
+```
 
 File handling
-(```)
+```
 npm install multer
-(```)
+```
 
 UUID for unique identifiers
-(```)
+```
 npm install uuid
-(```)
+```
 
 2. Create the required environment files:
 
 Client(.env file)
-(```)
+```
 VITE_SERVER=http://127.0.0.1:[PORT]
-(```)
+```
 
 Server(.env file)
-(```)
+```
 DB_USER=[Your_Username]
 DB_HOST=localhost
 DB_NAME=[Your_Database_Name]
@@ -115,21 +115,21 @@ DB_PASSWORD=[Your_Password]
 DB_PORT=[Your_Database_Port]
 ACCESS_SECRET=[Your_Access_Token]
 REFRESH_SECRET=[Your_Refresh_Token]
-(```)
+```
 
 3. Start the development servers:
 
 To run them individually:
 In one terminal
 cd client/
-(```)
+```
 npm run dev
-(```)
+```
 In another terminal
 cd server/
-(```)
+```
 npm run dev
-(```)
+```
 
 4. Access the deployed app on your local server at http://localhost:[PORT].
 
