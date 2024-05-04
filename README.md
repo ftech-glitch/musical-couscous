@@ -34,57 +34,75 @@ This app was built using the following technologies:
 
 To start using the app, follow these steps:
 
-# 1. Install required dependencies:
+1. Install required dependencies:
 
-# Client:
+Client:
 cd client/
+(```)
 npm install
+(```)
 
-# React and related dependencies
+React and related dependencies
+(```)
 npm install react react-dom
 npm install jwt-decode
+(```)
 
-# UI and styling frameworks
+UI and styling frameworks
+(```)
 npm install @mui/material @emotion/react @emotion/styled
 npm install mdb-react-ui-kit
 npm install styled-components
 npm install @fortawesome/free-regular-svg-icons @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
 npm install react-beautiful-dnd
+(```)
 
-# Router and utility libraries
-npm install react-router-dom
-
-# Server:
+Server:
 cd server/
+(```)
 npm install
+(```)
 
-# Express and related middleware
+Express and related middleware
+(```)
 npm install express
 npm install dotenv
 npm install cors
 npm install express-rate-limit
 npm install helmet
+(```)
 
-# Authentication and encryption
+Authentication and encryption
+(```)
 npm install jsonwebtoken jwt-decode
 npm install bcrypt
+(```)
 
-# Database and ORM
+Database and ORM
+(```)
 npm install pg
 npm install sequelize
+(```)
 
-# File handling
+File handling
+(```)
 npm install multer
+(```)
 
-# UUID for unique identifiers
+UUID for unique identifiers
+(```)
 npm install uuid
+(```)
 
-# 2. Create the required environment files:
+2. Create the required environment files:
 
 Client(.env file)
+(```)
 VITE_SERVER=http://127.0.0.1:[PORT]
+(```)
 
 Server(.env file)
+(```)
 DB_USER=[Your_Username]
 DB_HOST=localhost
 DB_NAME=[Your_Database_Name]
@@ -92,20 +110,23 @@ DB_PASSWORD=[Your_Password]
 DB_PORT=[Your_Database_Port]
 ACCESS_SECRET=[Your_Access_Token]
 REFRESH_SECRET=[Your_Refresh_Token]
+(```)
 
-# 3. Start the development servers:
-To run both frontend and backend concurrently:
-npm run dev
+3. Start the development servers:
 
 To run them individually:
-# In one terminal
-cd frontend/
+In one terminal
+cd client/
+(```)
 npm run dev
-# In another terminal
+(```)
+In another terminal
 cd server/
+(```)
 npm run dev
+(```)
 
-# 4. Access the deployed app on your local server at http://localhost:[PORT].
+4. Access the deployed app on your local server at http://localhost:[PORT].
 
 ## Next Steps
 Planned future enhancements for G.M.:
@@ -114,5 +135,3 @@ Planned future enhancements for G.M.:
 - Enhanced Music Player: Add additional controls like shuffle, repeat, and queue management.
 - Music Recommendations: Use algorithms to recommend music based on user preferences and listening history.
 - Integration with External Services: Connect to external music services for more music options and variety.
-
-
