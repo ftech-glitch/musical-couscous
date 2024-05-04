@@ -43,9 +43,9 @@ To start using the app, follow these steps:
 
 Client:
 cd client/
-(```
+```
 npm install
-```)
+```
 
 React and related dependencies
 (```)
