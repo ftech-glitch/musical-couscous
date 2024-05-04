@@ -1,6 +1,6 @@
 # G.M.
 
-Get ready to step into a musical time machine with G.M.(Good Music) the retro-inspired music streaming app that brings back the nostalgia of searching and discovering new songs.
+Get ready to step into a musical time machine with G.M.(Good Music) - the retro-inspired music streaming app that brings back the nostalgia of searching and discovering new songs.
 
 This app combines the charm of old-school aesthetics with the convenience of modern streaming, offering a unique experience for music lovers who appreciate a touch of the past.
 
@@ -20,6 +20,10 @@ Playlists (User): Create and customize your playlists. Add or remove songs, and 
 Albums (Artist): Create and customize your albums. Upload or remove new songs, and share your music with others.
 
 <img width="1437" alt="Screenshot 2024-05-04 at 2 18 38 PM" src="https://github.com/ftech-glitch/musical-couscous/assets/101855038/207d3e51-633d-4249-9f6e-feca94a2f00e">
+
+Pong Game: Enjoy a 2P pong game while sharing music with your friend. 
+
+<img width="1423" alt="Screenshot 2024-05-04 at 2 46 16 PM" src="https://github.com/ftech-glitch/musical-couscous/assets/101855038/8f805fd1-6027-47dc-9d8d-ed8e94b740db">
 
 
 Music Player: Enjoy a simple music player with basic controls, including play, pause, skip, and volume adjustment. Play your music seamlessly while browsing the app.
