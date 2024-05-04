@@ -6,19 +6,24 @@ This app combines the charm of old-school aesthetics with the convenience of mod
 
 ## Key Features
 Music Library: Browse a collection of songs, albums, and playlists. Discover new music and revisit your favorite tracks with ease.
+
 <img width="1434" alt="Screenshot 2024-05-04 at 2 17 11 PM" src="https://github.com/ftech-glitch/musical-couscous/assets/101855038/5f3bb065-e5d7-409c-82d5-8dbe63ac5da4">
 
 Search and Discover: Use the search functionality to find specific songs, albums, or artists. Explore new genres and artists to broaden your musical horizons.
+
 <img width="1430" alt="Screenshot 2024-05-04 at 2 18 16 PM" src="https://github.com/ftech-glitch/musical-couscous/assets/101855038/3b415c65-f1af-4617-851b-c70ba1002cb1">
 
 Playlists (User): Create and customize your playlists. Add or remove songs, and personalize your listening experience.
+
 <img width="1434" alt="Screenshot 2024-05-04 at 2 17 47 PM" src="https://github.com/ftech-glitch/musical-couscous/assets/101855038/754e213a-540f-4673-93bc-6268f6b12918">
 
 Albums (Artist): Create and customize your albums. Upload or remove new songs, and share your music with others.
+
 <img width="1437" alt="Screenshot 2024-05-04 at 2 18 38 PM" src="https://github.com/ftech-glitch/musical-couscous/assets/101855038/207d3e51-633d-4249-9f6e-feca94a2f00e">
 
 
 Music Player: Enjoy a simple music player with basic controls, including play, pause, skip, and volume adjustment. Play your music seamlessly while browsing the app.
+
 <img width="515" alt="Screenshot 2024-05-04 at 2 30 54 PM" src="https://github.com/ftech-glitch/musical-couscous/assets/101855038/df0645ac-bb77-4590-831f-8fde23090f3b">
 
 ## Technologies Used
@@ -38,9 +43,9 @@ To start using the app, follow these steps:
 
 Client:
 cd client/
-(```)
+(```
 npm install
-(```)
+```)
 
 React and related dependencies
 (```)
